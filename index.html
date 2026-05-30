@@ -54,6 +54,7 @@
             gap: 8px;
             max-width: 320px;
         }
+
         .toast {
             background: var(--paper);
             border: 1px solid var(--mist);
@@ -62,15 +63,23 @@
             border-radius: 8px;
             font-size: 12px;
             color: var(--bark);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             animation: toastIn 0.25s ease;
             display: flex;
             align-items: center;
             gap: 8px;
         }
+
         @keyframes toastIn {
-            from { opacity:0; transform: translateX(20px); }
-            to   { opacity:1; transform: none; }
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
         }
 
         /* Bell button */
@@ -87,7 +96,11 @@
             gap: 5px;
             transition: background .2s;
         }
-        .bell-btn:hover { background: var(--mist); }
+
+        .bell-btn:hover {
+            background: var(--mist);
+        }
+
         .bell-badge {
             background: var(--alert);
             color: white;
@@ -99,7 +112,10 @@
             text-align: center;
             display: none;
         }
-        .bell-badge.visible { display: inline-block; }
+
+        .bell-badge.visible {
+            display: inline-block;
+        }
 
         /* Alert drawer */
         .alert-drawer {
@@ -114,9 +130,12 @@
             z-index: 500;
             display: flex;
             flex-direction: column;
-            box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
         }
-        .alert-drawer.open { right: 0; }
+
+        .alert-drawer.open {
+            right: 0;
+        }
 
         .dwr-hdr {
             display: flex;
@@ -126,12 +145,14 @@
             border-bottom: 1px solid var(--mist);
             flex-shrink: 0;
         }
+
         .dwr-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 18px;
             font-weight: 300;
             color: var(--accent);
         }
+
         .dwr-close {
             background: none;
             border: 1px solid var(--mist);
@@ -142,13 +163,17 @@
             font-size: 12px;
             transition: background .2s;
         }
-        .dwr-close:hover { background: var(--mist); }
+
+        .dwr-close:hover {
+            background: var(--mist);
+        }
 
         .dwr-tabs {
             display: flex;
             border-bottom: 1px solid var(--mist);
             flex-shrink: 0;
         }
+
         .dwr-tab {
             flex: 1;
             padding: 10px 6px;
@@ -160,7 +185,11 @@
             transition: all .2s;
             border-bottom: 2px solid transparent;
         }
-        .dwr-tab:hover { color: var(--accent); }
+
+        .dwr-tab:hover {
+            color: var(--accent);
+        }
+
         .dwr-tab.on {
             color: var(--accent);
             border-bottom-color: var(--accent);
@@ -187,10 +216,26 @@
             align-items: flex-start;
             gap: 8px;
         }
-        .alert-entry-icon { font-size: 14px; flex-shrink: 0; }
-        .alert-entry-body { flex: 1; }
-        .alert-entry-msg { margin-bottom: 4px; line-height: 1.5; }
-        .alert-entry-time { font-size: 9px; color: var(--sage); }
+
+        .alert-entry-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .alert-entry-body {
+            flex: 1;
+        }
+
+        .alert-entry-msg {
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .alert-entry-time {
+            font-size: 9px;
+            color: var(--sage);
+        }
+
         .alert-entry-del {
             background: none;
             border: none;
@@ -200,7 +245,11 @@
             padding: 0;
             flex-shrink: 0;
         }
-        .alert-entry-del:hover { color: var(--alert); }
+
+        .alert-entry-del:hover {
+            color: var(--alert);
+        }
+
         .dwr-empty {
             color: var(--sage);
             font-size: 11px;
@@ -212,11 +261,14 @@
         .drawer-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.2);
             display: none;
             z-index: 499;
         }
-        .drawer-overlay.vis { display: block; }
+
+        .drawer-overlay.vis {
+            display: block;
+        }
 
         /* ══════════════════════════════════════════
    ROOT TOKENS — overridden per plant theme
@@ -327,7 +379,7 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        
+
 
         @keyframes pulse {
 
@@ -370,7 +422,7 @@
 ══════════════════════════════════════════ */
         .plant-selector {
             display: flex;
-            cursor:pointer;
+            cursor: pointer;
             padding: 24px 40px 0;
             border-bottom: 1px solid var(--mist);
             background: var(--paper);
@@ -1077,15 +1129,20 @@
         .add-btn:hover {
             filter: brightness(1.15);
         }
-/* ══════════════════════════════════════════
+
+        /* ══════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════ */
-footer {
-  text-align:center; padding:16px;
-  border-top:1px solid var(--mist);
-  font-size:9px; color:var(--sage);
-  letter-spacing:.12em; text-transform:uppercase;
-}
+        footer {
+            text-align: center;
+            padding: 16px;
+            border-top: 1px solid var(--mist);
+            font-size: 9px;
+            color: var(--sage);
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
         /* scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -1107,7 +1164,9 @@ footer {
     <!-- ALERT TOP BAR -->
     <div class="alert-top-bar" id="alert-top-bar">
         <span id="alert-top-msg"></span>
-        <button onclick="closeTopAlert()" style="margin-left:auto;background:rgba(255,255,255,0.2);border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;">✕ Dismiss</button>
+        <button onclick="closeTopAlert()"
+            style="margin-left:auto;background:rgba(255,255,255,0.2);border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;">✕
+            Dismiss</button>
     </div>
 
     <!-- TOAST BOX -->
@@ -1143,7 +1202,7 @@ footer {
                 Solar Active &nbsp;·&nbsp; Panel: <span id="hdr-w">4.2W</span>
                 &nbsp;·&nbsp; Battery: <span id="hdr-bat">87%</span>
             </div>
-            
+
         </div>
         <button class="bell-btn" onclick="toggleDrawer()">
             🔔
@@ -1198,7 +1257,7 @@ footer {
         <!-- SENSOR CARDS -->
         <div class="section-head">
             Live Sensors
-            <span class="mode-tag"><span id="mode-lbl" class="mode-auto">● Auto-Simulation</span></span>
+            <span class="mode-tag"><span id="mode-lbl" class="mode-auto">● Live · Supabase</span></span>
         </div>
         <div class="sensors-grid">
             <div class="sc s-light" id="sc-light">
@@ -1302,7 +1361,8 @@ footer {
                 </div>
                 <div class="ig">
                     <span class="ig-lbl">🧪 Soil pH</span>
-                    <input class="s-inp" id="in-ph" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5" disabled>
+                    <input class="s-inp" id="in-ph" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5"
+                        disabled>
                     <span class="ig-range">0.0 – 14.0 pH</span>
                 </div>
             </div>
@@ -1315,7 +1375,8 @@ footer {
         <!-- REAL-TIME ROLLING CHARTS -->
         <div class="section-head">
             Real-Time Stream
-            <span style="font-size:10px;color:var(--sage);letter-spacing:.06em">Last 60 s · updates every 2 s</span>
+            <span style="font-size:10px;color:var(--sage);letter-spacing:.06em">Rolling window · updates every 3
+                s</span>
         </div>
         <div class="rt-grid-3">
             <div class="rt-card">
@@ -1426,13 +1487,13 @@ footer {
                 <textarea class="note-ta" id="note-input" placeholder="Observation, treatment, reminder…"></textarea>
                 <button class="add-btn" onclick="addNote()">+ Add Note</button>
             </div>
-            
+
         </div>
-        
-        
+
+
     </main>
-<footer>SolarRoots · Powered by sun and soil · Butterfly Pea · Rosemary · Lemon Grass</footer>
-    
+    <footer>SolarRoots · Powered by sun and soil · Butterfly Pea · Rosemary · Lemon Grass</footer>
+
 
     <!-- ═══════════════════════════════════════════════════════════
      JAVASCRIPT
@@ -1506,9 +1567,14 @@ footer {
             }
         ];
 
+        // ─── SUPABASE LIVE TELEMETRY ─────────────────────────────────────────────────
+        const SUPABASE_URL = "https://rhsajzltxayjgifgnefy.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_dwBVUGoxa5AGK10xpUaGtQ_5yOVAYvH";
+        const telemetryEndpoint = `${SUPABASE_URL}/rest/v1/telemetry?order=id.desc&limit=1`;
+
         const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const RT_LEN = 50;        // 30 points × 2 s = 60 s window
-        const RT_MS = 2000;
+        const RT_LEN = 50;        // 50 points rolling window
+        const RT_MS = 3000;       // kept for reference; live interval is 3 s
 
         let cur = 0;
         let manualMode = false;
@@ -1531,7 +1597,7 @@ footer {
         let wkCharts = {};
         let camAF = null;
 
-        
+
         // ─── PLANT SELECT ─────────────────────────────────────────────────────────────
         function selectPlant(idx) {
             cur = idx;
@@ -1584,13 +1650,12 @@ footer {
             document.body.classList.remove("alert-active");
         }
 
-        // ─── SENSOR SIMULATION ───────────────────────────────────────────────────────
+        // ─── SIMULATION FALLBACK (used when DB fetch fails / manual mode active) ──────
         function jitter(v, r) { return Math.max(0, v + (Math.random() - .5) * r * 2); }
 
-        function getVals() {
+        function getSimulatedVals() {
             if (pendingInject) {
                 const v = pendingInject; pendingInject = null;
-                // shift plant base toward injected values for realistic drift
                 const b = PLANTS[cur].base;
                 b.light = v.light; b.air = v.air; b.soil = v.soil; b.flow = v.flow; b.tank = v.tank;
                 return v;
@@ -1604,6 +1669,72 @@ footer {
                 tank: +jitter(b.tank, 0.4).toFixed(1),
                 ph: +jitter(b.ph, 0.15).toFixed(1)
             };
+        }
+
+        // ─── LIVE SUPABASE FETCH ─────────────────────────────────────────────────────
+        async function fetchLiveTelemetry() {
+            // If the user has pushed a manual override, consume it and skip the fetch
+            if (manualMode && pendingInject) {
+                const v = getSimulatedVals(); // drains pendingInject
+                pushBuf(v);
+                updateCards(v);
+                updateRtCharts();
+                return;
+            }
+
+            try {
+                const response = await window.fetch(telemetryEndpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error(`[SolarRoots] Supabase fetch error — HTTP ${response.status}: ${response.statusText}`);
+                    // Graceful fallback: keep the dashboard alive with simulated data
+                    const v = getSimulatedVals();
+                    pushBuf(v);
+                    updateCards(v);
+                    updateRtCharts();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    console.warn('[SolarRoots] No rows returned from telemetry table — waiting for next poll.');
+                    return;
+                }
+
+                const latestReading = data[0];
+
+                // ── Map DB fields → internal value object ──────────────────────────
+                // Soil moisture from DB is expected as a raw 0–100 percentage index.
+                // All other fields are used directly as-is.
+                const v = {
+                    light: parseFloat(latestReading.temperature) || 0,   // temperature mapped to light indicator
+                    air: parseFloat(latestReading.air_humidity) || 0,   // ambient humidity → air card
+                    soil: parseFloat(latestReading.soil_moisture) || 0,   // soil moisture % index
+                    flow: parseFloat(latestReading.water_flow) || 0,   // real-time flow rate
+                    tank: parseFloat(latestReading.tank_level) || 0,   // water storage capacity
+                    ph: parseFloat(latestReading.ph) || 7.0  // soil pH (fallback neutral)
+                };
+
+                pushBuf(v);
+                updateCards(v);
+                updateRtCharts();
+
+            } catch (err) {
+                console.error('[SolarRoots] Network error during telemetry fetch:', err);
+                // Graceful fallback: keep dashboard alive
+                const v = getSimulatedVals();
+                pushBuf(v);
+                updateCards(v);
+                updateRtCharts();
+            }
         }
 
         // push to ring buffer for current plant
@@ -1672,7 +1803,7 @@ footer {
 
             // Fire toast only on the rising edge (new alert, not sustained)
             if (isAlert && !_prevAlert[key]) {
-                const labels = { light:'☀️ Low light', air:'💨 Dry air', soil:'🌱 Low soil moisture', tank:'🪣 Tank low' };
+                const labels = { light: '☀️ Low light', air: '💨 Dry air', soil: '🌱 Low soil moisture', tank: '🪣 Tank low' };
                 const label = labels[key] || ('⚠ ' + key);
                 showToast(label + ' — ' + valStr);
             }
@@ -1713,7 +1844,7 @@ footer {
             badge.classList.add('visible');
 
             // Add to active panel
-            const time = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+            const time = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
             alertLog.unshift({ msg, time });
             renderDrawerAlerts();
         }
@@ -1923,7 +2054,7 @@ footer {
             pb.classList.toggle('ready', manualMode);
             const ml = document.getElementById('mode-lbl');
             if (manualMode) { ml.textContent = '● Manual Override'; ml.className = 'mode-tag mode-manual'; }
-            else { ml.textContent = '● Auto-Simulation'; ml.className = 'mode-tag mode-auto'; pendingInject = null; }
+            else { ml.textContent = '● Live · Supabase'; ml.className = 'mode-tag mode-auto'; pendingInject = null; }
         }
 
         function injectManual() {
@@ -2137,17 +2268,14 @@ footer {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNote(); }
         });
 
-        // ─── MAIN LOOP ────────────────────────────────────────────────────────────────
-        function loop() {
-            const v = getVals();
-            pushBuf(v);
-            updateCards(v);
-            updateRtCharts();
-        }
-
         // ─── INIT ────────────────────────────────────────────────────────────────────
         selectPlant(0);
-        setInterval(loop, RT_MS);
+
+        // Populate dashboard immediately on load (no blank 3-second wait)
+        window.addEventListener('DOMContentLoaded', fetchLiveTelemetry);
+
+        // Poll Supabase telemetry table every 3 seconds
+        setInterval(fetchLiveTelemetry, 3000);
         setInterval(tickSolar, 35000);
     </script>
 </body>
