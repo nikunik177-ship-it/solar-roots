@@ -1607,7 +1607,8 @@
             <div class="sc s-ph" id="sc-ph">
                 <span class="s-icon">🧪</span>
                 <div class="s-lbl">Soil pH</div>
-                <div class="s-val" id="sv-ph">—<span class="s-unit">pH</span></div>
+                <!-- rn-ph: consumed by setCard('ph') for the live value readout -->
+                <div class="s-val" id="sv-ph"><span id="rn-ph">—</span><span class="s-unit">pH</span></div>
                 <div class="s-bar-w">
                     <div class="s-bar" id="sb-ph" style="width:0%"></div>
                 </div>
@@ -2088,14 +2089,38 @@
         // Track previous alert states to avoid spam per sensor
         const _prevAlert = {};
 
-        function setCard(key, valStr, pct, trend, isAlert, prev, cur_v) {
-            document.getElementById('sv-' + key).innerHTML = valStr;
-            document.getElementById('sb-' + key).style.width = Math.min(pct, 100) + '%';
-            document.getElementById('st-' + key).textContent = trend;
-            document.getElementById('sc-' + key).classList.toggle('alerting', isAlert);
-            document.getElementById('rn-' + key).textContent = valStr;
+        // ── NULL-SAFE DOM ACCESSOR ────────────────────────────────────────────────
+        // Returns the element or null; logs a warning instead of throwing.
+        function safeEl(id) {
+            const el = document.getElementById(id);
+            if (!el) {
+                console.warn(`[SolarRoots Warning] Element with ID '${id}' was not found in the HTML layout.`);
+            }
+            return el;
+        }
 
-            // Fire toast only on the rising edge (new alert, not sustained)
+        function setCard(key, valStr, pct, trend, isAlert, prev, cur_v) {
+            // ── Value display (innerHTML so the unit <span> is preserved) ──
+            const svEl = safeEl('sv-' + key);
+            if (svEl) svEl.innerHTML = valStr;
+
+            // ── Progress bar width ──
+            const sbEl = safeEl('sb-' + key);
+            if (sbEl) sbEl.style.width = Math.min(pct, 100) + '%';
+
+            // ── Trend text ──
+            const stEl = safeEl('st-' + key);
+            if (stEl) stEl.textContent = trend;
+
+            // ── Alert highlight ring on card wrapper ──
+            const scEl = safeEl('sc-' + key);
+            if (scEl) scEl.classList.toggle('alerting', isAlert);
+
+            // ── Real-time "now" readout (rn-ph lives inside sv-ph on the pH card) ──
+            const rnEl = safeEl('rn-' + key);
+            if (rnEl) rnEl.textContent = valStr;
+
+            // ── Fire toast only on rising edge (first occurrence, not sustained) ──
             if (isAlert && !_prevAlert[key]) {
                 const labels = { light: '☀️ Low light', air: '💨 Dry air', soil: '🌱 Low soil moisture', tank: '🪣 Tank low' };
                 const label = labels[key] || ('⚠ ' + key);
@@ -2103,15 +2128,18 @@
             }
             _prevAlert[key] = isAlert;
 
+            // ── Delta arrow (↑ / ↓ / →) ──
             if (prev != null) {
                 const diff = cur_v - prev;
-                const el = document.getElementById('sd-' + key);
-                if (Math.abs(diff) > 0.05) {
-                    const up = diff > 0;
-                    el.textContent = (up ? '↑' : '↓') + (Math.abs(diff) < 1 ? Math.abs(diff).toFixed(2) : Math.abs(diff).toFixed(0));
-                    el.className = 's-delta ' + (up ? 'up' : 'dn');
-                } else {
-                    el.textContent = '→'; el.className = 's-delta flat';
+                const el = safeEl('sd-' + key);
+                if (el) {
+                    if (Math.abs(diff) > 0.05) {
+                        const up = diff > 0;
+                        el.textContent = (up ? '↑' : '↓') + (Math.abs(diff) < 1 ? Math.abs(diff).toFixed(2) : Math.abs(diff).toFixed(0));
+                        el.className = 's-delta ' + (up ? 'up' : 'dn');
+                    } else {
+                        el.textContent = '→'; el.className = 's-delta flat';
+                    }
                 }
             }
         }
