@@ -1479,6 +1479,111 @@
                 font-size: 9px;
             }
         }
+        /* ══════════════════════════════════════════
+   MULTIMODAL PLANT SCAN PANEL
+══════════════════════════════════════════ */
+        /* Scan button — lives in the plant-selector bar */
+        .scan-btn {
+            margin-left: auto;
+            align-self: flex-end;
+            margin-bottom: 1px;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 7px 7px 0 0;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: filter .2s, transform .15s;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        .scan-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0);
+            transition: background .2s;
+        }
+        .scan-btn:hover::before  { background: rgba(255,255,255,0.12); }
+        .scan-btn:active         { transform: scale(0.97); }
+        .scan-btn.scanning       { opacity: .65; cursor: wait; }
+        .scan-btn .scan-icon     { font-size: 13px; }
+        .scan-btn .scan-spinner  {
+            width: 10px; height: 10px;
+            border: 1.5px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            display: none;
+        }
+        .scan-btn.scanning .scan-spinner { display: block; }
+        .scan-btn.scanning .scan-icon    { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Live viewfinder strip shown while stream is active */
+        .vision-strip {
+            display: none;               /* hidden until camera initialised */
+            align-items: center;
+            gap: 10px;
+            padding: 6px 40px 0;
+            background: var(--paper);
+            border-bottom: 1px solid var(--mist);
+            transition: background .5s;
+        }
+        .vision-strip.active { display: flex; }
+        .vision-video {
+            width: 120px;
+            height: 68px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--mist);
+            background: #000;
+            flex-shrink: 0;
+        }
+        .vision-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .vision-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--sage);
+        }
+        .vision-result {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--accent);
+            min-height: 22px;
+            transition: color .4s;
+        }
+        .vision-thresh {
+            font-size: 10px;
+            color: var(--bark);
+        }
+        .vision-just {
+            font-size: 9px;
+            color: var(--sage);
+            max-width: 320px;
+            line-height: 1.5;
+        }
+        /* pulse ring on successful scan */
+        @keyframes scanPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(100,200,140,0.55); }
+            70%  { box-shadow: 0 0 0 10px rgba(100,200,140,0); }
+            100% { box-shadow: 0 0 0 0 rgba(100,200,140,0); }
+        }
+        .vision-video.scanned { animation: scanPulse .8s ease; }
     </style>
 </head>
 
@@ -1542,6 +1647,22 @@
         <div class="plant-tab" onclick="selectPlant(1)">
             🌾 Lemon Grass
             <span class="health-dot" id="hd-1" style="background:#bfaa30"></span>
+        </div>
+        <!-- SCAN BUTTON — anchored to the right of the tab bar -->
+        <button class="scan-btn" id="scan-btn" onclick="scanPlantViaCamera()" title="Capture a photo from your camera and let Gemini AI identify the plant species">
+            <span class="scan-icon">📷</span>
+            <span class="scan-spinner"></span>
+            Scan Plant via Camera
+        </button>
+    </div>
+    <!-- VISION STRIP — visible while webcam stream is alive -->
+    <div class="vision-strip" id="vision-strip">
+        <video id="vision-video" class="vision-video" autoplay playsinline muted></video>
+        <div class="vision-meta">
+            <span class="vision-label">🧠 AI Vision — Last Scan</span>
+            <div class="vision-result" id="vision-result">— awaiting scan —</div>
+            <div class="vision-thresh" id="vision-thresh"></div>
+            <div class="vision-just"  id="vision-just"></div>
         </div>
     </div>
 
@@ -2783,6 +2904,165 @@
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNote(); }
         });
 
+        // ─── MULTIMODAL GEMINI VISION ─────────────────────────────────────────────────
+        // Manages the webcam stream, snapshot capture, Gemini POST, and live
+        // parameter binding back into the PLANTS threshold table.
+
+        let _webcamStream = null;  // MediaStream reference — kept alive after first init
+
+        // Initialise the device camera as soon as the page is interactive.
+        // Uses `environment` facing mode to prefer the rear camera on phones.
+        async function initWebcam() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                console.warn('[Vision] getUserMedia not supported on this browser.');
+                return;
+            }
+            try {
+                _webcamStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+                    audio: false
+                });
+                const video = document.getElementById('vision-video');
+                if (video) {
+                    video.srcObject = _webcamStream;
+                    // Show the vision strip once the stream is flowing
+                    video.onloadedmetadata = () => {
+                        document.getElementById('vision-strip').classList.add('active');
+                    };
+                }
+            } catch (err) {
+                // Permissions denied or no camera — gracefully hide strip
+                console.warn('[Vision] Camera access denied or unavailable:', err.message);
+                document.getElementById('vision-strip').classList.remove('active');
+            }
+        }
+
+        // Called when the user clicks "Scan Plant via Camera".
+        // 1. Captures a still frame from the live video element.
+        // 2. Encodes it as a base64 JPEG.
+        // 3. POSTs it (along with current sensor telemetry) to /api/insights.
+        // 4. Calls applyVisionResult() to bind Gemini's response into the UI.
+        async function scanPlantViaCamera() {
+            const btn   = document.getElementById('scan-btn');
+            const video = document.getElementById('vision-video');
+            const snap  = document.getElementById('vision-snap-canvas');
+
+            if (!_webcamStream || !video || video.readyState < 2) {
+                showToast('📷 Camera not ready — please allow camera access and wait a moment.');
+                return;
+            }
+
+            // ── Debounce: ignore clicks while already scanning ────────────────────────
+            if (btn.classList.contains('scanning')) return;
+            btn.classList.add('scanning');
+
+            try {
+                // ── 1. Draw current video frame onto the hidden canvas ────────────────
+                snap.width  = video.videoWidth  || 640;
+                snap.height = video.videoHeight || 480;
+                const snapCtx = snap.getContext('2d');
+                snapCtx.drawImage(video, 0, 0, snap.width, snap.height);
+
+                // ── 2. Encode as JPEG base64 (quality 0.82) ──────────────────────────
+                const dataUrl   = snap.toDataURL('image/jpeg', 0.82);
+                // Strip the data-URL prefix so the server receives pure base64
+                const imageData = dataUrl.replace(/^data:[^;]+;base64,/, '');
+
+                // Pulse the viewfinder to give visual feedback
+                document.getElementById('vision-video').classList.add('scanned');
+                setTimeout(() => document.getElementById('vision-video').classList.remove('scanned'), 900);
+
+                // ── 3. Build the telemetry payload for the serverless function ────────
+                const lastBuf     = rtBufs[cur];
+                const latestSoil  = lastBuf.soil.filter(v => v !== null).at(-1)  ?? 0;
+                const latestAir   = lastBuf.air.filter(v => v !== null).at(-1)   ?? 0;
+                const latestFlow  = lastBuf.flow.filter(v => v !== null).at(-1)  ?? 0;
+                const latestTank  = lastBuf.tank.filter(v => v !== null).at(-1)  ?? 0;
+                const latestLight = lastBuf.light.filter(v => v !== null).at(-1) ?? 0;
+                const latestPh    = lastBuf.ph.filter(v => v !== null).at(-1)    ?? 7.0;
+
+                const body = JSON.stringify({
+                    soil:      latestSoil,
+                    air:       latestAir,
+                    flow:      latestFlow,
+                    tank:      latestTank,
+                    light:     latestLight,
+                    ph:        latestPh,
+                    imageData  // base64 JPEG payload
+                });
+
+                // ── 4. POST to the Vercel serverless function ─────────────────────────
+                const res = await window.fetch('/api/insights', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body
+                });
+
+                if (!res.ok) {
+                    const errJson = await res.json().catch(() => ({}));
+                    console.error('[Vision] /api/insights error:', res.status, errJson);
+                    showToast(`⚠️ Vision scan failed (HTTP ${res.status}) — check console.`);
+                    return;
+                }
+
+                const result = await res.json();
+                applyVisionResult(result);
+
+            } catch (err) {
+                console.error('[Vision] Scan error:', err);
+                showToast('⚠️ Vision scan encountered a network error.');
+            } finally {
+                btn.classList.remove('scanning');
+            }
+        }
+
+        // Receives the structured Gemini JSON response and:
+        //   • Updates the vision strip result display
+        //   • Updates the plant name card (pi-name, cam-plant-name)
+        //   • Overrides PLANTS[cur].thresh.soilLow with the AI recommendation
+        //   • Shows a toast confirmation
+        function applyVisionResult(result) {
+            const { detectedPlant, recommendedMoistureThreshold, justification } = result;
+
+            // ── 1. Update vision strip ─────────────────────────────────────────────────
+            const resultEl = document.getElementById('vision-result');
+            const threshEl = document.getElementById('vision-thresh');
+            const justEl   = document.getElementById('vision-just');
+
+            if (resultEl)  resultEl.textContent = detectedPlant;
+            if (threshEl)  threshEl.textContent = `💧 AI Soil Threshold: ${recommendedMoistureThreshold}%`;
+            if (justEl)    justEl.textContent   = justification;
+
+            // ── 2. Update plant name cards ─────────────────────────────────────────────
+            const piName    = document.getElementById('pi-name');
+            const camName   = document.getElementById('cam-plant-name');
+            const leafBadge = document.getElementById('leaf-badge');
+
+            if (piName)    piName.textContent  = detectedPlant;
+            if (camName)   camName.textContent = detectedPlant;
+            if (leafBadge) {
+                const emoji = detectedPlant === 'Lemongrass' ? '🌾' : '🌿';
+                leafBadge.textContent = `${emoji} AI Detected: ${detectedPlant}`;
+            }
+
+            // ── 3. Override irrigation threshold for the active plant ─────────────────
+            // This live-patches PLANTS[cur].thresh.soilLow so every subsequent
+            // call to updateCards() and setCard('soil', ...) immediately uses the
+            // AI-recommended value without any page reload.
+            const prevThresh = PLANTS[cur].thresh.soilLow;
+            PLANTS[cur].thresh.soilLow = recommendedMoistureThreshold;
+
+            console.info(
+                `[Vision] soilLow threshold: ${prevThresh}% → ${recommendedMoistureThreshold}%`,
+                `(plant: ${detectedPlant})`
+            );
+
+            // ── 4. Toast confirmation ──────────────────────────────────────────────────
+            showToast(
+                `🧠 Vision: ${detectedPlant} detected — soil threshold set to ${recommendedMoistureThreshold}%`
+            );
+        }
+
         // ─── INIT ────────────────────────────────────────────────────────────────────
         selectPlant(0);
 
@@ -2792,7 +3072,15 @@
         // Poll Supabase telemetry table every 3 seconds
         setInterval(fetchLiveTelemetry, 3000);
         setInterval(tickSolar, 35000);
+
+        // Start webcam stream on page mount (environment-facing, audio off).
+        // Runs asynchronously — does not block the dashboard initialisation.
+        initWebcam();
     </script>
+
+    <!-- hidden snapshot canvas used by the Gemini Vision scan -->
+    <canvas id="vision-snap-canvas" style="display:none;"></canvas>
+
 </body>
 
 </html>
