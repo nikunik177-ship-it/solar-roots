@@ -4190,7 +4190,39 @@
 
 
 
-            // ── 1. Update vision strip ─────────────────────────────────────────────────
+            // ── 1. Determine dynamic plant category emoji ──────────────────────────────
+
+            const lowerPlant = detectedPlant.toLowerCase();
+
+            let emoji = '🌿';
+
+            if (lowerPlant.includes('grass')) emoji = '🌾';
+
+            else if (lowerPlant.includes('mint')) emoji = '🌱';
+
+            else if (lowerPlant.includes('tomato')) emoji = '🍅';
+
+            else if (lowerPlant.includes('chili') || lowerPlant.includes('pepper')) emoji = '🌶️';
+
+            else if (lowerPlant.includes('rose')) emoji = '🌹';
+
+            else if (lowerPlant.includes('flower')) emoji = '🌸';
+
+            else if (lowerPlant.includes('cactus') || lowerPlant.includes('succulent')) emoji = '🌵';
+
+            else if (lowerPlant.includes('tree')) emoji = '🌳';
+
+            else if (lowerPlant.includes('rosemary')) emoji = '🌿';
+
+            else if (lowerPlant.includes('lemon')) emoji = '🍋';
+
+            else if (lowerPlant.includes('basil')) emoji = '🌱';
+
+            else if (lowerPlant.includes('fern')) emoji = '🌿';
+
+
+
+            // ── 2. Update vision strip outputs ─────────────────────────────────────────
 
             const resultEl = document.getElementById('vision-result');
 
@@ -4208,47 +4240,45 @@
 
 
 
-            // ── 2. Update plant name cards ─────────────────────────────────────────────
+            // ── 3. Stored Active Plant Data Bindings ────────────────────────────────────
 
-            const piName    = document.getElementById('pi-name');
+            PLANTS[cur].name = detectedPlant;
 
-            const camName   = document.getElementById('cam-plant-name');
+            PLANTS[cur].species = 'AI Vision Classified';
 
-            const leafBadge = document.getElementById('leaf-badge');
-
-
-
-            if (piName)    piName.textContent  = detectedPlant;
-
-            if (camName)   camName.textContent = detectedPlant;
-
-            if (leafBadge) {
-
-                const emoji = detectedPlant === 'Lemongrass' ? '🌾' : '🌿';
-
-                leafBadge.textContent = `${emoji} AI Detected: ${detectedPlant}`;
-
-            }
-
-
-
-            // ── 3. Override irrigation threshold for the active plant ─────────────────
-
-            // This live-patches PLANTS[cur].thresh.soilLow so every subsequent
-
-            // call to updateCards() and setCard('soil', ...) immediately uses the
-
-            // AI-recommended value without any page reload.
-
-            const prevThresh = PLANTS[cur].thresh.soilLow;
+            PLANTS[cur].leafStatus = `${emoji} AI Detected: ${detectedPlant}`;
 
             PLANTS[cur].thresh.soilLow = recommendedMoistureThreshold;
 
 
 
+            // ── 4. Re-render standard cards and active elements ───────────────────────
+
+            applyInfo();
+
+
+
+            const activeTab = document.querySelectorAll('.plant-tab')[cur];
+
+            if (activeTab) {
+
+                activeTab.innerHTML = `${emoji} ${detectedPlant} <span class="health-dot" id="hd-${cur}" style="background:${PLANTS[cur].dotColor}"></span>`;
+
+            }
+
+
+
+            if (typeof prevVals === 'object' && prevVals.soil !== undefined) {
+
+                updateCards(prevVals);
+
+            }
+
+
+
             console.info(
 
-                `[Vision] soilLow threshold: ${prevThresh}% → ${recommendedMoistureThreshold}%`,
+                `[Vision] soilLow threshold override: ${recommendedMoistureThreshold}%`,
 
                 `(plant: ${detectedPlant})`
 
@@ -4256,7 +4286,7 @@
 
 
 
-            // ── 4. Toast confirmation ──────────────────────────────────────────────────
+            // ── 5. Toast confirmation ──────────────────────────────────────────────────
 
             showToast(
 

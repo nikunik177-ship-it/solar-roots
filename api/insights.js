@@ -8,18 +8,25 @@ const GEMINI_API_URL =
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 // Agronomic vision system prompt — instructs Gemini to return pure JSON
-const SYSTEM_PROMPT = `You are an automated agronomic vision system for a smart greenhouse.
-Analyze the image frame provided to identify if the plant is 'Rosemary' or 'Lemongrass'.
-Based on your botanical knowledge, output your response strictly as a raw JSON object (no markdown, no code fences) containing exactly these keys:
+const SYSTEM_PROMPT = `You are a universal agronomic computer vision engine. Analyze the provided image to identify the plant species present. Based on standard botanical and agricultural science, determine the ideal soil moisture threshold percentage (an integer between 10 and 80) required for this plant to thrive.
+
+You must return your response strictly as a raw JSON object with these keys:
 {
-  "detectedPlant": "Rosemary" or "Lemongrass",
-  "recommendedMoistureThreshold": integer between 0 and 100,
-  "justification": "one sentence explanation"
+  "detectedPlant": "Name of the identified plant",
+  "recommendedMoistureThreshold": integer,
+  "justification": "A brief one-sentence scientific explanation for this specific threshold requirement."
+}
+
+If no plant or organic life is detected in the image at all, return:
+{
+  "detectedPlant": "Unknown Target",
+  "recommendedMoistureThreshold": 35,
+  "justification": "No recognizable plant foliage detected. Reverting system to safe default baseline."
 }`;
 
 // Text-only fallback prompt used when no image is supplied
 const TEXT_PROMPT = (soil, air, flow, tank, light, ph) =>
-    `You are an automated agronomic AI for a smart greenhouse. Based on the sensor readings below, infer the most likely plant species (Rosemary or Lemongrass) and recommend an optimal soil moisture irrigation threshold.
+    `You are an automated agronomic AI for a smart greenhouse. Based on the sensor readings below, infer the most likely plant species present and determine the ideal soil moisture threshold percentage (an integer between 10 and 80) required for this plant to thrive.
 
 Sensor Readings:
 - Soil Moisture: ${soil}%
@@ -29,11 +36,18 @@ Sensor Readings:
 - Light Intensity: ${light} lux
 - Soil pH: ${ph}
 
-Output your response strictly as a raw JSON object (no markdown, no code fences):
+You must return your response strictly as a raw JSON object with these keys:
 {
-  "detectedPlant": "Rosemary" or "Lemongrass",
-  "recommendedMoistureThreshold": integer between 0 and 100,
-  "justification": "one sentence explanation"
+  "detectedPlant": "Name of the identified plant",
+  "recommendedMoistureThreshold": integer,
+  "justification": "A brief one-sentence scientific explanation for this specific threshold requirement."
+}
+
+If no plant or organic life is detected or inferred, return:
+{
+  "detectedPlant": "Unknown Target",
+  "recommendedMoistureThreshold": 35,
+  "justification": "No recognizable plant foliage detected. Reverting system to safe default baseline."
 }`;
 
 export default async function handler(req, res) {
@@ -167,14 +181,16 @@ export default async function handler(req, res) {
         }
 
         // ── Validate and sanitise the payload ────────────────────────────────
-        const detectedPlant = ['Rosemary', 'Lemongrass'].includes(parsed.detectedPlant)
-            ? parsed.detectedPlant
-            : 'Rosemary';
+        const detectedPlant = typeof parsed.detectedPlant === 'string' && parsed.detectedPlant.trim() !== ''
+            ? parsed.detectedPlant.trim()
+            : 'Unknown Target';
 
-        const recommendedMoistureThreshold = Math.max(
-            0,
-            Math.min(100, parseInt(parsed.recommendedMoistureThreshold, 10) || 30)
-        );
+        let recommendedMoistureThreshold = parseInt(parsed.recommendedMoistureThreshold, 10);
+        if (isNaN(recommendedMoistureThreshold)) {
+            recommendedMoistureThreshold = 35;
+        } else {
+            recommendedMoistureThreshold = Math.max(10, Math.min(80, recommendedMoistureThreshold));
+        }
 
         const justification =
             typeof parsed.justification === 'string'
