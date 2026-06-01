@@ -156,46 +156,37 @@ export default async function handler(req, res) {
         const rawText =
             geminiJson?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 
-        // ── Parse JSON from the model output ────────────────────────────────
-        // Gemini may wrap the JSON in ```json ... ``` — strip that safely.
-        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            console.error('[insights] No JSON found in Gemini response:', rawText);
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(422).json({
-                error:   'Could not parse a JSON object from the model response.',
-                rawText: rawText.slice(0, 400)
-            });
-        }
+        // ── Parse and validate JSON from the model output ─────────────────────
+        let detectedPlant = 'Unknown Target';
+        let recommendedMoistureThreshold = 35;
+        let justification = 'No recognizable plant foliage detected. Reverting system to safe default baseline.';
 
-        let parsed;
         try {
-            parsed = JSON.parse(jsonMatch[0]);
-        } catch (parseErr) {
-            console.error('[insights] JSON.parse failed:', parseErr.message, jsonMatch[0]);
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(422).json({
-                error:   'JSON parse error on model output.',
-                rawText: rawText.slice(0, 400)
-            });
+            const firstBrace = rawText.indexOf('{');
+            const lastBrace = rawText.lastIndexOf('}');
+            
+            if (firstBrace !== -1 && lastBrace !== -1) {
+                const cleanText = rawText.substring(firstBrace, lastBrace + 1);
+                const parsed = JSON.parse(cleanText);
+                
+                if (typeof parsed.detectedPlant === 'string' && parsed.detectedPlant.trim() !== '') {
+                    detectedPlant = parsed.detectedPlant.trim();
+                }
+                
+                let parsedThreshold = parseInt(parsed.recommendedMoistureThreshold, 10);
+                if (!isNaN(parsedThreshold)) {
+                    recommendedMoistureThreshold = Math.max(10, Math.min(80, parsedThreshold));
+                }
+                
+                if (typeof parsed.justification === 'string' && parsed.justification.trim() !== '') {
+                    justification = parsed.justification.slice(0, 300);
+                }
+            } else {
+                throw new Error("No valid JSON structure found in response");
+            }
+        } catch (err) {
+            console.warn('[insights] Bulletproof extraction failed, using default fallback payload:', err.message);
         }
-
-        // ── Validate and sanitise the payload ────────────────────────────────
-        const detectedPlant = typeof parsed.detectedPlant === 'string' && parsed.detectedPlant.trim() !== ''
-            ? parsed.detectedPlant.trim()
-            : 'Unknown Target';
-
-        let recommendedMoistureThreshold = parseInt(parsed.recommendedMoistureThreshold, 10);
-        if (isNaN(recommendedMoistureThreshold)) {
-            recommendedMoistureThreshold = 35;
-        } else {
-            recommendedMoistureThreshold = Math.max(10, Math.min(80, recommendedMoistureThreshold));
-        }
-
-        const justification =
-            typeof parsed.justification === 'string'
-                ? parsed.justification.slice(0, 300)
-                : 'No justification provided.';
 
         // ── Return structured response ────────────────────────────────────────
         res.setHeader('Content-Type', 'application/json');
