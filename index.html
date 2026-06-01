@@ -1606,6 +1606,8 @@
 
                 <div class="s-val" id="sv-soil">—<span class="s-unit">%</span></div>
 
+                <div class="threshold-target" style="font-size: 0.85rem; color: #52665C; margin-top: 4px;">Target Threshold: <span id="ui-moisture-threshold">--</span>%</div>
+
                 <div class="s-bar-w">
 
                     <div class="s-bar" id="sb-soil" style="width:0%"></div>
@@ -2333,6 +2335,11 @@
             document.getElementById('leaf-badge').style.background = p.leafBg;
 
             document.getElementById('notes-plant-lbl').textContent = p.name;
+
+            const uiThreshold = document.getElementById('ui-moisture-threshold');
+            if (uiThreshold) {
+                uiThreshold.innerText = p.thresh.soilLow;
+            }
 
             // update header health dots
 
@@ -4237,6 +4244,11 @@
             if (threshEl)  threshEl.textContent = `💧 AI Soil Threshold: ${recommendedMoistureThreshold}%`;
 
             if (justEl)    justEl.textContent   = justification;
+
+            const uiThreshold = document.getElementById('ui-moisture-threshold');
+            if (uiThreshold) {
+                uiThreshold.innerText = recommendedMoistureThreshold;
+            }
 
 
 
