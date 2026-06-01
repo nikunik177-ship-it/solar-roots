@@ -1144,6 +1144,34 @@
         }
 
         /* scrollbar */
+        /* ══════════════════════════════════════════
+   CANVAS PARTICLE OVERLAY STYLES
+══════════════════════════════════════════ */
+        @keyframes soilPulseRed {
+            0%, 100% { opacity: 0.18; }
+            50%       { opacity: 0.72; }
+        }
+        @keyframes soilPulseGreen {
+            0%, 100% { opacity: 0.25; }
+            50%       { opacity: 0.55; }
+        }
+        /* Thin status strip below cam-canvas driven by JS class */
+        .cam-moisture-strip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            transition: background 0.6s ease, opacity 0.4s;
+            opacity: 0.85;
+        }
+        .cam-moisture-strip.moist-ok    { background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e); }
+        .cam-moisture-strip.moist-warn  {
+            background: linear-gradient(90deg, #ef4444, #f87171, #ef4444);
+            animation: soilPulseRed 1.6s ease-in-out infinite;
+        }
+        .cam-moisture-strip.moist-mid   { background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b); }
+
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -1522,11 +1550,16 @@
         <div class="top-row">
             <div class="camera-wrap">
                 <canvas id="cam-canvas"></canvas>
+                <!-- Particle overlay canvas sits above the plant canvas, below the DOM overlay -->
+                <canvas id="particle-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+                <div class="cam-moisture-strip" id="cam-moisture-strip"></div>
                 <div class="cam-overlay">
                     <div class="cam-top-left">
                         <div class="live-dot"></div>
                         Live Feed — <span id="cam-plant-name">Rosemary</span>
                     </div>
+                    <!-- Flow status badge injected by JS -->
+                    <div id="flow-status-badge" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(100,220,255,0.82);transition:opacity .5s;opacity:0;">● IRRIGATING</div>
                     <div class="cam-pills" id="cam-pills"></div>
                     <div class="cam-ts" id="cam-ts"></div>
                     <div class="leaf-badge" id="leaf-badge">🌿 Needles: Healthy</div>
@@ -1892,6 +1925,24 @@
         let wkCharts = {};
         let camAF = null;
 
+        // ─── CANVAS TELEMETRY STATE ───────────────────────────────────────────────────
+        // These are written by updateCanvasMetrics() on every Supabase poll
+        // and read every animation frame — zero setTimeout / mock intervals.
+        let _canvasFlowRate  = 0;   // L/h — drives particle velocity
+        let _canvasSoilPct   = 50;  // 0-100 — drives moisture glow
+        let _particleAF      = null;
+
+        // Particle pool — pre-allocated, reused every frame
+        const PARTICLE_COUNT = 60;
+        const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+            x: Math.random(),   // normalised 0-1 across canvas width
+            y: 0.55 + Math.random() * 0.35,  // bottom 35% — root/soil band
+            vy: 0,              // current velocity (written per frame)
+            phase: Math.random() * Math.PI * 2,  // sine-wave offset for natural drift
+            size: 1.2 + Math.random() * 2.2,
+            alpha: 0.4 + Math.random() * 0.55
+        }));
+
 
         // ─── PLANT SELECT ─────────────────────────────────────────────────────────────
         function selectPlant(idx) {
@@ -1974,6 +2025,7 @@
                 pushBuf(v);
                 updateCards(v);
                 updateRtCharts();
+                updateCanvasMetrics(v);   // ← canvas hooks on manual inject
                 return;
             }
 
@@ -1994,6 +2046,7 @@
                     pushBuf(v);
                     updateCards(v);
                     updateRtCharts();
+                    updateCanvasMetrics(v);   // ← canvas hooks on HTTP error fallback
                     return;
                 }
 
@@ -2021,6 +2074,7 @@
                 pushBuf(v);
                 updateCards(v);
                 updateRtCharts();
+                updateCanvasMetrics(v);   // ← live canvas hooks
 
             } catch (err) {
                 console.error('[SolarRoots] Network error during telemetry fetch:', err);
@@ -2029,7 +2083,30 @@
                 pushBuf(v);
                 updateCards(v);
                 updateRtCharts();
+                updateCanvasMetrics(v);   // ← canvas hooks on network error fallback
             }
+        }
+
+        // ─── CANVAS METRICS BRIDGE ───────────────────────────────────────────────────
+        // Called inside fetchLiveTelemetry() so canvas state is ALWAYS driven by
+        // real Supabase data (or the graceful-fallback simulated values).
+        // No separate mock interval is used.
+        function updateCanvasMetrics(v) {
+            _canvasFlowRate = v.flow  || 0;
+            _canvasSoilPct  = v.soil  || 0;
+
+            // ── Soil Moisture Strip (DOM element, CSS-animated) ───────────────────
+            const strip = document.getElementById('cam-moisture-strip');
+            if (strip) {
+                strip.classList.remove('moist-ok', 'moist-warn', 'moist-mid');
+                if      (_canvasSoilPct < 20)  strip.classList.add('moist-warn');
+                else if (_canvasSoilPct >= 40)  strip.classList.add('moist-ok');
+                else                            strip.classList.add('moist-mid');
+            }
+
+            // ── Irrigating badge visibility ──────────────────────────────────────
+            const badge = document.getElementById('flow-status-badge');
+            if (badge) badge.style.opacity = _canvasFlowRate > 0 ? '1' : '0';
         }
 
         // push to ring buffer for current plant
@@ -2405,17 +2482,23 @@
         // ─── CAMERA (Animated Canvas) ─────────────────────────────────────────────────
         function startCamera() {
             cancelAnimationFrame(camAF);
+            cancelAnimationFrame(_particleAF);
+
             const canvas = document.getElementById('cam-canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx    = canvas.getContext('2d');
+            const pCanvas = document.getElementById('particle-canvas');
+            const pCtx    = pCanvas.getContext('2d');
             const p = PLANTS[cur];
 
             function resize() {
-                const W = canvas.offsetWidth || 700;
+                const W = canvas.offsetWidth  || 700;
                 const H = canvas.offsetHeight || 300;
-                if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+                if (canvas.width  !== W || canvas.height !== H) { canvas.width  = W; canvas.height = H; }
+                if (pCanvas.width !== W || pCanvas.height !== H) { pCanvas.width = W; pCanvas.height = H; }
                 return [W, H];
             }
 
+            // ── Plant scene loop ──────────────────────────────────────────────────
             function draw(t) {
                 const [W, H] = resize();
                 ctx.clearRect(0, 0, W, H);
@@ -2431,9 +2514,119 @@
                 vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,0.6)');
                 ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
 
+                // ── Soil Moisture health glow (drawn on top of plant scene) ──────
+                // Reads _canvasSoilPct which is updated by updateCanvasMetrics() on
+                // every Supabase poll — no separate mock interval.
+                drawSoilMoistureGlow(ctx, W, H, t);
+
                 camAF = requestAnimationFrame(draw);
             }
             requestAnimationFrame(draw);
+
+            // ── Water Flow Particle Engine (separate canvas layer) ────────────────
+            // Velocity ∝ _canvasFlowRate (L/h). At flow=0 particles are fully static.
+            function drawParticles(t) {
+                const [W, H] = resize();
+                pCtx.clearRect(0, 0, W, H);
+
+                // Normalise flow: 0 L/h → speed 0, 20 L/h → speed 1 (full)
+                const flowNorm = Math.min(_canvasFlowRate / 20, 1);
+                const baseSpeed = flowNorm * 0.0028;  // fraction of canvas width per frame
+
+                particles.forEach((pt, idx) => {
+                    // Update position only if water is flowing
+                    if (flowNorm > 0) {
+                        // Sinusoidal vertical drift gives fluid waviness
+                        pt.vy = Math.sin(t * 0.04 + pt.phase) * 0.0003 * flowNorm;
+                        pt.x += baseSpeed * (0.6 + 0.4 * Math.sin(pt.phase * 1.3));
+                        pt.y += pt.vy;
+                        // Wrap horizontally; clamp vertically inside soil band
+                        if (pt.x > 1) pt.x = 0;
+                        if (pt.y < 0.52) pt.y = 0.52;
+                        if (pt.y > 0.94) pt.y = 0.94;
+                    }
+
+                    const px = pt.x * W;
+                    const py = pt.y * H;
+                    const sz = pt.size * (0.8 + flowNorm * 0.4);
+
+                    // Neon-blue glowing orb
+                    const grad = pCtx.createRadialGradient(px, py, 0, px, py, sz * 2.8);
+                    grad.addColorStop(0,   `rgba(120, 220, 255, ${pt.alpha * (0.5 + flowNorm * 0.5)})`);
+                    grad.addColorStop(0.4, `rgba(60,  180, 255, ${pt.alpha * 0.6 * flowNorm})`);
+                    grad.addColorStop(1,   'rgba(0, 120, 200, 0)');
+
+                    pCtx.beginPath();
+                    pCtx.arc(px, py, sz * 2.8, 0, Math.PI * 2);
+                    pCtx.fillStyle = grad;
+                    pCtx.fill();
+
+                    // Bright core dot
+                    pCtx.beginPath();
+                    pCtx.arc(px, py, sz * 0.55, 0, Math.PI * 2);
+                    pCtx.fillStyle = `rgba(180, 240, 255, ${flowNorm > 0 ? 0.9 : 0})`;
+                    pCtx.fill();
+                });
+
+                // Flowing light trail along the bottom edge when irrigating
+                if (flowNorm > 0.01) {
+                    const trailY = H * 0.90;
+                    const trailGrad = pCtx.createLinearGradient(0, trailY, W, trailY);
+                    const trailPhase = (t * baseSpeed * 400) % 1;
+                    trailGrad.addColorStop(Math.max(0, trailPhase - 0.2), 'rgba(60,180,255,0)');
+                    trailGrad.addColorStop(trailPhase,                     `rgba(100,220,255,${0.35 * flowNorm})`);
+                    trailGrad.addColorStop(Math.min(1, trailPhase + 0.2), 'rgba(60,180,255,0)');
+                    pCtx.fillStyle = trailGrad;
+                    pCtx.fillRect(0, trailY - 2, W, 4);
+                }
+
+                _particleAF = requestAnimationFrame(drawParticles);
+            }
+            requestAnimationFrame(drawParticles);
+        }
+
+        // ─── SOIL MOISTURE HEALTH GLOW ────────────────────────────────────────────────
+        // Rendered directly onto the plant canvas on every frame so it inherits
+        // the same coordinate space. Reads _canvasSoilPct (0-100).
+        function drawSoilMoistureGlow(ctx, W, H, t) {
+            const soil = _canvasSoilPct;
+
+            let glowColor, pulseFreq, baseAlpha;
+            if (soil < 20) {
+                // ── WARNING: pulsing red ──
+                glowColor  = '220, 60, 60';
+                pulseFreq  = 1.8;  // fast anxious pulse
+                baseAlpha  = 0.22;
+            } else if (soil >= 40) {
+                // ── HEALTHY: calm green ──
+                glowColor  = '60, 210, 100';
+                pulseFreq  = 0.6;  // slow calm breath
+                baseAlpha  = 0.14;
+            } else {
+                // ── TRANSITION (20–40%): amber ──
+                glowColor  = '240, 170, 40';
+                pulseFreq  = 1.0;
+                baseAlpha  = 0.16;
+            }
+
+            // Pulse amplitude: 0 → baseAlpha → baseAlpha*3
+            const alpha = baseAlpha + Math.abs(Math.sin(t * 0.001 * pulseFreq * Math.PI)) * baseAlpha * 1.8;
+
+            // Elliptical root-zone glow centred at bottom-centre of canvas
+            const cx = W * 0.5;
+            const cy = H * 0.88;
+            const rx = W * 0.42;
+            const ry = H * 0.18;
+
+            ctx.save();
+            ctx.scale(1, ry / rx);
+            const glowGrad = ctx.createRadialGradient(cx, cy * (rx / ry), 0, cx, cy * (rx / ry), rx);
+            glowGrad.addColorStop(0,   `rgba(${glowColor}, ${alpha})`);
+            glowGrad.addColorStop(0.5, `rgba(${glowColor}, ${alpha * 0.4})`);
+            glowGrad.addColorStop(1,   `rgba(${glowColor}, 0)`);
+            ctx.fillStyle = glowGrad;
+            ctx.fillRect(cx - rx, (cy - ry) * (rx / ry), rx * 2, ry * 2 * (rx / ry));
+            ctx.restore();
         }
 
 
