@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GEMINI_API_URL =
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 // Agronomic vision system prompt — instructs Gemini to return pure JSON
 const SYSTEM_PROMPT = `You are an automated agronomic vision system for a smart greenhouse.
