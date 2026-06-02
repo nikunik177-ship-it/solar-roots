@@ -14,7 +14,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <style>
         /* ─── PREMIUM ORGANIC SOFT GREEN & PRISTINE WHITE STYLE SYSTEM ─── */
@@ -123,8 +125,15 @@
         }
 
         @keyframes toastIn {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: none; }
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
         }
 
         .bell-btn {
@@ -139,7 +148,7 @@
             align-items: center;
             gap: 6px;
             transition: all .2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
         }
 
         .bell-btn:hover {
@@ -265,7 +274,7 @@
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
         }
 
         .alert-entry-icon {
@@ -383,8 +392,17 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: .4; transform: scale(1.3); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .4;
+                transform: scale(1.3);
+            }
         }
 
         /* ── PLANT TABS & NAVIGATION ── */
@@ -460,7 +478,8 @@
             min-width: 0;
         }
 
-        .camera-wrap, .vision-strip {
+        .camera-wrap,
+        .vision-strip {
             flex: 1;
             min-width: 0;
             border-radius: 20px;
@@ -473,7 +492,8 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .camera-wrap:hover, .vision-strip:hover {
+        .camera-wrap:hover,
+        .vision-strip:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px -5px rgba(20, 40, 30, 0.06);
         }
@@ -488,7 +508,7 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-            background: linear-gradient(to top, rgba(20,40,30,0.65) 0%, rgba(20,40,30,0) 40%, rgba(20,40,30,0.2) 100%);
+            background: linear-gradient(to top, rgba(20, 40, 30, 0.65) 0%, rgba(20, 40, 30, 0) 40%, rgba(20, 40, 30, 0.2) 100%);
         }
 
         .cam-top-left {
@@ -536,7 +556,7 @@
             border-radius: 20px;
             letter-spacing: .04em;
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .cam-ts {
@@ -559,76 +579,113 @@
             font-weight: 600;
             letter-spacing: .04em;
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* ── VISION WEBCAM FEED MIRROR ── */
         .vision-strip {
-            display: none; /* hidden until webcam is alive */
-        }
-        .vision-strip.active {
             display: flex;
+            background: #FFFFFF;
         }
+
         .vision-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            transform: scaleX(-1); /* mirror effect */
+            transform: scaleX(-1);
+            /* mirror effect */
         }
+
+        .open-cam-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            flex-grow: 1;
+            margin: 16px 0;
+            border-radius: 12px;
+            border: 2px dashed #BCE5D2;
+            background: linear-gradient(135deg, #EBF7EE, #D1EDE0);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            padding: 12px;
+        }
+
+        .open-cam-btn:hover {
+            transform: translateY(-2px);
+            border-color: #3B8C66 !important;
+            background: linear-gradient(135deg, #EBF7EE, #C2E8D7) !important;
+            box-shadow: 0 6px 15px -3px rgba(34, 92, 64, 0.15) !important;
+        }
+
+        .open-cam-btn:active {
+            transform: translateY(1px);
+        }
+
         .vision-overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: linear-gradient(to top, rgba(20,40,30,0.8) 0%, rgba(20,40,30,0.1) 50%, rgba(20,40,30,0.3) 100%);
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 20px;
-            color: #FFFFFF;
+            color: var(--bark);
+            pointer-events: auto;
         }
+
         .vision-top-left {
             font-size: 11px;
             font-weight: 600;
             letter-spacing: .08em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, .9);
+            color: var(--bark);
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(20, 40, 30, 0.4);
+            background: var(--bg);
+            border: 1px solid var(--mist);
             padding: 4px 10px;
             border-radius: 20px;
-            backdrop-filter: blur(4px);
             align-self: flex-start;
         }
+
         .vision-meta-bottom {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
+
         .vision-label {
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: .08em;
-            color: rgba(255, 255, 255, .6);
+            color: var(--sage);
             font-weight: 600;
         }
+
         .vision-result {
             font-family: 'Cormorant Garamond', serif;
             font-size: 24px;
             font-weight: 400;
-            color: #FFFFFF;
+            color: var(--bark);
             line-height: 1.2;
         }
+
         .vision-thresh {
             font-size: 11.5px;
             font-weight: 600;
-            color: #8CFFC2;
+            color: var(--accent);
         }
+
         .vision-just {
             font-size: 11px;
-            color: rgba(255, 255, 255, .8);
+            color: var(--sage);
             line-height: 1.4;
             max-width: 95%;
         }
@@ -722,12 +779,29 @@
             border-radius: 0 0 20px 20px;
         }
 
-        .sc.s-light::after { background: var(--sun); }
-        .sc.s-air::after   { background: var(--water); }
-        .sc.s-soil::after  { background: var(--leaf); }
-        .sc.s-flow::after  { background: #4a9fb0; }
-        .sc.s-tank::after  { background: var(--sun); }
-        .sc.s-ph::after    { background: #8e44ad; }
+        .sc.s-light::after {
+            background: var(--sun);
+        }
+
+        .sc.s-air::after {
+            background: var(--water);
+        }
+
+        .sc.s-soil::after {
+            background: var(--leaf);
+        }
+
+        .sc.s-flow::after {
+            background: #4a9fb0;
+        }
+
+        .sc.s-tank::after {
+            background: var(--sun);
+        }
+
+        .sc.s-ph::after {
+            background: #8e44ad;
+        }
 
         .s-icon {
             font-size: 22px;
@@ -773,12 +847,29 @@
             transition: width .7s ease;
         }
 
-        .sc.s-light .s-bar { background: var(--sun); }
-        .sc.s-air .s-bar   { background: var(--water); }
-        .sc.s-soil .s-bar  { background: var(--leaf); }
-        .sc.s-flow .s-bar  { background: #4a9fb0; }
-        .sc.s-tank .s-bar  { background: var(--sun); }
-        .sc.s-ph .s-bar    { background: #8e44ad; }
+        .sc.s-light .s-bar {
+            background: var(--sun);
+        }
+
+        .sc.s-air .s-bar {
+            background: var(--water);
+        }
+
+        .sc.s-soil .s-bar {
+            background: var(--leaf);
+        }
+
+        .sc.s-flow .s-bar {
+            background: #4a9fb0;
+        }
+
+        .sc.s-tank .s-bar {
+            background: var(--sun);
+        }
+
+        .sc.s-ph .s-bar {
+            background: #8e44ad;
+        }
 
         .s-trend {
             font-size: 11px;
@@ -798,9 +889,20 @@
             background: #F3F7F4;
         }
 
-        .up { color: #3B8C66; background: #EBF7EE; }
-        .dn { color: var(--alert); background: #FDF1F1; }
-        .flat { color: var(--sage); background: #F3F7F4; }
+        .up {
+            color: #3B8C66;
+            background: #EBF7EE;
+        }
+
+        .dn {
+            color: var(--alert);
+            background: #FDF1F1;
+        }
+
+        .flat {
+            color: var(--sage);
+            background: #F3F7F4;
+        }
 
         /* ── MANUAL SENSOR INPUT PANEL ── */
         .input-panel {
@@ -883,7 +985,9 @@
         }
 
         /* ── BUTTON STYLING & BRAND ACCENTS ── */
-        .scan-btn, .push-btn.ready, .add-btn {
+        .scan-btn,
+        .push-btn.ready,
+        .add-btn {
             background: linear-gradient(135deg, #3B8C66, #225C40) !important;
             color: #FFFFFF !important;
             font-weight: 600 !important;
@@ -902,13 +1006,17 @@
             box-shadow: 0 6px 15px -3px rgba(34, 92, 64, 0.25) !important;
         }
 
-        .scan-btn:hover, .push-btn.ready:hover, .add-btn:hover {
+        .scan-btn:hover,
+        .push-btn.ready:hover,
+        .add-btn:hover {
             filter: brightness(1.1) !important;
             transform: translateY(-1.5px) !important;
             box-shadow: 0 10px 20px -3px rgba(34, 92, 64, 0.35) !important;
         }
 
-        .scan-btn:active, .push-btn.ready:active, .add-btn:active {
+        .scan-btn:active,
+        .push-btn.ready:active,
+        .add-btn:active {
             transform: translateY(0.5px) !important;
         }
 
@@ -925,17 +1033,28 @@
         }
 
         .scan-btn .scan-spinner {
-            width: 12px; height: 12px;
-            border: 2px solid rgba(255,255,255,0.4);
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin .7s linear infinite;
             display: none;
         }
 
-        .scan-btn.scanning .scan-spinner { display: block; }
-        .scan-btn.scanning .scan-icon { display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .scan-btn.scanning .scan-spinner {
+            display: block;
+        }
+
+        .scan-btn.scanning .scan-icon {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         .toggle-btn {
             background: #FFFFFF;
@@ -999,8 +1118,13 @@
             letter-spacing: .04em;
         }
 
-        .mode-auto { color: #3B8C66; }
-        .mode-manual { color: var(--sun); }
+        .mode-auto {
+            color: #3B8C66;
+        }
+
+        .mode-manual {
+            color: var(--sun);
+        }
 
         /* ── REAL-TIME ROLLING CHARTS ── */
         .rt-grid-3 {
@@ -1162,7 +1286,7 @@
             align-items: flex-start;
             gap: 12px;
             animation: slideIn .25s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.01);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
         }
 
         .note-txt {
@@ -1243,9 +1367,17 @@
 
         /* ── CANVAS PARTICLE OVERLAY STYLES ── */
         @keyframes soilPulseRed {
-            0%, 100% { opacity: 0.18; }
-            50%       { opacity: 0.72; }
+
+            0%,
+            100% {
+                opacity: 0.18;
+            }
+
+            50% {
+                opacity: 0.72;
+            }
         }
+
         .cam-moisture-strip {
             position: absolute;
             bottom: 0;
@@ -1255,67 +1387,101 @@
             transition: background 0.6s ease, opacity 0.4s;
             opacity: 0.85;
         }
-        .cam-moisture-strip.moist-ok    { background: linear-gradient(90deg, #3B8C66, #4ade80, #3B8C66); }
-        .cam-moisture-strip.moist-warn  {
+
+        .cam-moisture-strip.moist-ok {
+            background: linear-gradient(90deg, #3B8C66, #4ade80, #3B8C66);
+        }
+
+        .cam-moisture-strip.moist-warn {
             background: linear-gradient(90deg, #E65F5F, #f87171, #E65F5F);
             animation: soilPulseRed 1.6s ease-in-out infinite;
         }
-        .cam-moisture-strip.moist-mid   { background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24); }
+
+        .cam-moisture-strip.moist-mid {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+        }
 
         @keyframes scanPulse {
-            0%   { box-shadow: 0 0 0 0 rgba(59, 140, 102, 0.55); }
-            70%  { box-shadow: 0 0 0 12px rgba(59, 140, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 140, 102, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 140, 102, 0.55);
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(59, 140, 102, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 140, 102, 0);
+            }
         }
-        .vision-video.scanned { animation: scanPulse .8s ease; }
+
+        .vision-video.scanned {
+            animation: scanPulse .8s ease;
+        }
 
         /* ── RESPONSIVE FLUID MEDIA QUERIES (COLLAPSE DECK) ── */
         @media (max-width: 992px) {
             main {
                 padding: 20px 16px;
             }
+
             header {
                 padding: 14px 20px;
             }
+
             .plant-selector {
                 padding: 16px 20px 0;
                 overflow-x: auto;
                 gap: 6px;
             }
+
             .plant-tab {
                 padding: 10px 20px;
                 font-size: 16px;
             }
+
             .top-row {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
             .hero-split-row {
                 flex-direction: column;
                 gap: 20px;
             }
-            .camera-wrap, .vision-strip {
-                aspect-ratio: 4/3; /* comfortable stacking proportion */
+
+            .camera-wrap,
+            .vision-strip {
+                aspect-ratio: 4/3;
+                /* comfortable stacking proportion */
             }
+
             .sensors-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
             }
+
             .ip-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 16px;
             }
-            .rt-grid-3, .rt-grid-2, .wk-grid {
+
+            .rt-grid-3,
+            .rt-grid-2,
+            .wk-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
+
             .notes-row {
                 flex-direction: column;
                 gap: 14px;
             }
+
             .note-ta {
                 height: 70px;
             }
+
             .add-btn {
                 width: 100%;
                 padding: 14px !important;
@@ -1324,13 +1490,17 @@
         }
 
         @media (max-width: 576px) {
-            .sensors-grid, .ip-grid {
+
+            .sensors-grid,
+            .ip-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
+
             .logo {
                 font-size: 24px;
             }
+
             .solar-pill {
                 display: none;
             }
@@ -1350,7 +1520,6 @@
         <span id="alert-top-msg"></span>
 
         <button onclick="closeTopAlert()"
-
             style="margin-left:auto;background:rgba(255,255,255,0.2);border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;">✕
 
             Dismiss</button>
@@ -1465,7 +1634,8 @@
 
         <!-- SCAN BUTTON — anchored to the right of the tab bar -->
 
-        <button class="scan-btn" id="scan-btn" onclick="scanPlantViaCamera()" title="Capture a photo from your camera and let Gemini AI identify the plant species">
+        <button class="scan-btn" id="scan-btn" onclick="scanPlantViaCamera()"
+            title="Capture a photo from your camera and let Gemini AI identify the plant species">
 
             <span class="scan-icon">📷</span>
 
@@ -1477,548 +1647,558 @@
 
     </div>
 
-            <!-- CAMERA + PLANT INFO -->
-        <div class="top-row">
-            <div class="hero-split-row">
-                <div class="camera-wrap">
-                    <canvas id="cam-canvas"></canvas>
-                    <!-- Particle overlay canvas sits above the plant canvas, below the DOM overlay -->
-                    <canvas id="particle-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
-                    <div class="cam-moisture-strip" id="cam-moisture-strip"></div>
-                    <div class="cam-overlay">
-                        <div class="cam-top-left">
-                            <div class="live-dot"></div>
-                            Live Feed — <span id="cam-plant-name">Rosemary</span>
-                        </div>
-                        <!-- Flow status badge injected by JS -->
-                        <div id="flow-status-badge" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(100,220,255,0.82);transition:opacity .5s;opacity:0;">● IRRIGATING</div>
-                        <div class="cam-pills" id="cam-pills"></div>
-                        <div class="cam-ts" id="cam-ts"></div>
-                        <div class="leaf-badge" id="leaf-badge">🌿 Needles: Healthy</div>
+    <!-- CAMERA + PLANT INFO -->
+    <div class="top-row">
+        <div class="hero-split-row">
+            <div class="camera-wrap">
+                <canvas id="cam-canvas"></canvas>
+                <!-- Particle overlay canvas sits above the plant canvas, below the DOM overlay -->
+                <canvas id="particle-canvas"
+                    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+                <div class="cam-moisture-strip" id="cam-moisture-strip"></div>
+                <div class="cam-overlay">
+                    <div class="cam-top-left">
+                        <div class="live-dot"></div>
+                        Live Feed — <span id="cam-plant-name">Rosemary</span>
                     </div>
-                </div>
-                <!-- VISION STRIP — live webcam video stream container styled to match camera-wrap -->
-                <div class="vision-strip" id="vision-strip">
-                    <video id="vision-video" class="vision-video" autoplay playsinline muted></video>
-                    <div class="vision-overlay">
-                        <div class="vision-top-left">
-                            <div class="live-dot" style="background:#3B8C66"></div>
-                            🧠 AI Vision — Live Viewfinder
-                        </div>
-                        <div class="vision-meta-bottom">
-                            <span class="vision-label">Last Scan Analysis</span>
-                            <div class="vision-result" id="vision-result">— awaiting scan —</div>
-                            <div class="vision-thresh" id="vision-thresh"></div>
-                            <div class="vision-just"  id="vision-just"></div>
-                        </div>
-                    </div>
+                    <!-- Flow status badge injected by JS -->
+                    <div id="flow-status-badge"
+                        style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(100,220,255,0.82);transition:opacity .5s;opacity:0;">
+                        ● IRRIGATING</div>
+                    <div class="cam-pills" id="cam-pills"></div>
+                    <div class="cam-ts" id="cam-ts"></div>
+                    <div class="leaf-badge" id="leaf-badge">🌿 Needles: Healthy</div>
                 </div>
             </div>
-            <div class="plant-info-card">
-
-                <div class="pic-name" id="pi-name">Rosemary</div>
-
-                <div class="ir"><span class="il">Species</span><span class="iv" id="pi-species">Salvia rosmarinus</span>
-
-                </div>
-
-                <div class="ir"><span class="il">Watering</span><span class="iv" id="pi-water">Every 3 days</span></div>
-
-                <div class="ir"><span class="il">Sun Need</span><span class="iv" id="pi-sun">Full sun</span></div>
-
-                <div class="ir"><span class="il">Last Watered</span><span class="iv" id="pi-lastw">1d ago</span></div>
-
-                <div class="ir"><span class="il">Irrigation</span><span class="iv" id="pi-irr" style="color:#5a9a4a">●
-
-                        Active</span></div>
-
-                <div class="ir"><span class="il">Health</span><span class="iv" id="pi-health" style="color:#5a9a4a">●
-
-                        Thriving</span></div>
-
-                <div class="ir"><span class="il">Growth Stage</span><span class="iv" id="pi-extra">Pre-Flowering</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- SENSOR CARDS -->
-
-        <div class="section-head">
-
-            Live Sensors
-
-            <span class="mode-tag"><span id="mode-lbl" class="mode-auto">● Live · Supabase</span></span>
-
-        </div>
-
-        <div class="sensors-grid">
-
-            <div class="sc s-light" id="sc-light">
-
-                <span class="s-icon">☀️</span>
-
-                <div class="s-lbl">Light Intensity</div>
-
-                <div class="s-val" id="sv-light">—<span class="s-unit">lux</span></div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-light" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-light">—</div>
-
-                <span class="s-delta" id="sd-light"></span>
-
-            </div>
-
-            <div class="sc s-air" id="sc-air">
-
-                <span class="s-icon">💨</span>
-
-                <div class="s-lbl">Air Moisture</div>
-
-                <div class="s-val" id="sv-air">—<span class="s-unit">%</span></div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-air" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-air">—</div>
-
-                <span class="s-delta" id="sd-air"></span>
-
-            </div>
-
-            <div class="sc s-soil" id="sc-soil">
-
-                <span class="s-icon">🌱</span>
-
-                <div class="s-lbl">Soil Moisture</div>
-
-                <div class="s-val" id="sv-soil">—<span class="s-unit">%</span></div>
-
-                <div class="threshold-target" style="font-size: 0.85rem; color: #52665C; margin-top: 4px;">Target Threshold: <span id="ui-moisture-threshold">--</span>%</div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-soil" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-soil">—</div>
-
-                <span class="s-delta" id="sd-soil"></span>
-
-            </div>
-
-            <div class="sc s-flow" id="sc-flow">
-
-                <span class="s-icon">💧</span>
-
-                <div class="s-lbl">Water Flow</div>
-
-                <div class="s-val" id="sv-flow">—<span class="s-unit">L/h</span></div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-flow" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-flow">—</div>
-
-                <span class="s-delta" id="sd-flow"></span>
-
-            </div>
-
-            <div class="sc s-tank" id="sc-tank">
-
-                <span class="s-icon">🪣</span>
-
-                <div class="s-lbl">Tank Level</div>
-
-                <div class="s-val" id="sv-tank">—<span class="s-unit">%</span></div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-tank" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-tank">—</div>
-
-                <span class="s-delta" id="sd-tank"></span>
-
-            </div>
-
-            <div class="sc s-ph" id="sc-ph">
-
-                <span class="s-icon">🧪</span>
-
-                <div class="s-lbl">Soil pH</div>
-
-                <!-- rn-ph: consumed by setCard('ph') for the live value readout -->
-
-                <div class="s-val" id="sv-ph"><span id="rn-ph">—</span><span class="s-unit">pH</span></div>
-
-                <div class="s-bar-w">
-
-                    <div class="s-bar" id="sb-ph" style="width:0%"></div>
-
-                </div>
-
-                <div class="s-trend" id="st-ph">—</div>
-
-                <span class="s-delta" id="sd-ph"></span>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- MANUAL INPUT PANEL -->
-
-        <div class="input-panel">
-
-            <div class="ip-header">
-
-                <span class="ip-title">Manual Sensor Input</span>
-
-                <div style="display:flex;align-items:center;gap:10px">
-
-                    <span style="font-size:10px;color:var(--sage)">Override with real hardware readings</span>
-
-                    <button class="toggle-btn" id="manual-btn" onclick="toggleManual()">Enable Manual Mode</button>
-
-                </div>
-
-            </div>
-
-            <div class="ip-grid">
-
-                <div class="ig">
-
-                    <span class="ig-lbl">☀️ Light (lux)</span>
-
-                    <input class="s-inp" id="in-light" type="number" min="0" max="100000" placeholder="e.g. 52000"
-
-                        disabled>
-
-                    <span class="ig-range">0 – 100,000 lux</span>
-
-                </div>
-
-                <div class="ig">
-
-                    <span class="ig-lbl">💨 Air Moisture (%)</span>
-
-                    <input class="s-inp" id="in-air" type="number" min="0" max="100" placeholder="e.g. 68" disabled>
-
-                    <span class="ig-range">0 – 100 %</span>
-
-                </div>
-
-                <div class="ig">
-
-                    <span class="ig-lbl">🌱 Soil Moisture (%)</span>
-
-                    <input class="s-inp" id="in-soil" type="number" min="0" max="100" placeholder="e.g. 74" disabled>
-
-                    <span class="ig-range">0 – 100 %</span>
-
-                </div>
-
-                <div class="ig">
-
-                    <span class="ig-lbl">💧 Water Flow (L/h)</span>
-
-                    <input class="s-inp" id="in-flow" type="number" min="0" max="20" step="0.1" placeholder="e.g. 1.8"
-
-                        disabled>
-
-                    <span class="ig-range">0 – 20 L/h</span>
-
-                </div>
-
-                <div class="ig">
-
-                    <span class="ig-lbl">🪣 Tank Level (%)</span>
-
-                    <input class="s-inp" id="in-tank" type="number" min="0" max="100" placeholder="e.g. 80" disabled>
-
-                    <span class="ig-range">0 – 100 %</span>
-
-                </div>
-
-                <div class="ig">
-
-                    <span class="ig-lbl">🧪 Soil pH</span>
-
-                    <input class="s-inp" id="in-ph" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5"
-
-                        disabled>
-
-                    <span class="ig-range">0.0 – 14.0 pH</span>
-
-                </div>
-
-            </div>
-
-            <div style="display:flex;align-items:center">
-
-                <button class="push-btn" id="push-btn" onclick="injectManual()" disabled>Push to Live Stream</button>
-
-                <span class="inject-ok" id="inject-ok">✓ Injected into stream</span>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- REAL-TIME ROLLING CHARTS -->
-
-        <div class="section-head">
-
-            Real-Time Stream
-
-            <span style="font-size:10px;color:var(--sage);letter-spacing:.06em">Rolling window · updates every 3
-
-                s</span>
-
-        </div>
-
-        <div class="rt-grid-3">
-
-            <div class="rt-card">
-
-                <div class="rt-head">
-
-                    <span class="rt-title">☀️ Light</span>
-
-                    <div style="display:flex;align-items:center;gap:8px">
-
-                        <span class="rt-now" id="rn-light">—</span>
-
-                        <button class="dl-btn" onclick="dlCanvas('rt-light','rt_light')">↓</button>
-
+            <!-- VISION STRIP — camera scan launcher and last scan analysis card -->
+            <div class="vision-strip" id="vision-strip">
+                <div class="vision-overlay">
+                    <div class="vision-top-left">
+                        <div class="live-dot" style="background:#3B8C66"></div>
+                        🧠 AI Vision Scanner
                     </div>
 
-                </div>
+                    <!-- elegant action button with clean camera icon -->
+                    <button class="open-cam-btn" onclick="openCameraModal()" title="Launch camera to capture and analyze plant species">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#225C40" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span style="font-weight: 700; font-size: 11px; color: #225C40; letter-spacing: 0.05em; text-transform: uppercase;">Launch Camera Scanner</span>
+                    </button>
 
-                <canvas id="rt-light" height="100"></canvas>
+                    <div class="vision-meta-bottom">
+                        <span class="vision-label">Last Scan Analysis</span>
+                        <div class="vision-result" id="vision-result">— awaiting scan —</div>
+                        <div class="vision-thresh" id="vision-thresh"></div>
+                        <div class="vision-just" id="vision-just"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="plant-info-card">
+
+            <div class="pic-name" id="pi-name">Rosemary</div>
+
+            <div class="ir"><span class="il">Species</span><span class="iv" id="pi-species">Salvia rosmarinus</span>
 
             </div>
 
-            <div class="rt-card">
+            <div class="ir"><span class="il">Watering</span><span class="iv" id="pi-water">Every 3 days</span></div>
 
-                <div class="rt-head">
+            <div class="ir"><span class="il">Sun Need</span><span class="iv" id="pi-sun">Full sun</span></div>
 
-                    <span class="rt-title">💨 Air Moisture</span>
+            <div class="ir"><span class="il">Last Watered</span><span class="iv" id="pi-lastw">1d ago</span></div>
 
-                    <div style="display:flex;align-items:center;gap:8px">
+            <div class="ir"><span class="il">Irrigation</span><span class="iv" id="pi-irr" style="color:#5a9a4a">●
 
-                        <span class="rt-now" id="rn-air">—</span>
+                    Active</span></div>
 
-                        <button class="dl-btn" onclick="dlCanvas('rt-air','rt_air')">↓</button>
+            <div class="ir"><span class="il">Health</span><span class="iv" id="pi-health" style="color:#5a9a4a">●
 
-                    </div>
+                    Thriving</span></div>
 
-                </div>
-
-                <canvas id="rt-air" height="100"></canvas>
-
-            </div>
-
-            <div class="rt-card">
-
-                <div class="rt-head">
-
-                    <span class="rt-title">🌱 Soil Moisture</span>
-
-                    <div style="display:flex;align-items:center;gap:8px">
-
-                        <span class="rt-now" id="rn-soil">—</span>
-
-                        <button class="dl-btn" onclick="dlCanvas('rt-soil','rt_soil')">↓</button>
-
-                    </div>
-
-                </div>
-
-                <canvas id="rt-soil" height="100"></canvas>
+            <div class="ir"><span class="il">Growth Stage</span><span class="iv" id="pi-extra">Pre-Flowering</span>
 
             </div>
 
         </div>
 
-        <div class="rt-grid-2">
+    </div>
 
-            <div class="rt-card">
 
-                <div class="rt-head">
 
-                    <span class="rt-title">💧 Water Flow</span>
+    <!-- SENSOR CARDS -->
 
-                    <div style="display:flex;align-items:center;gap:8px">
+    <div class="section-head">
 
-                        <span class="rt-now" id="rn-flow">—</span>
+        Live Sensors
 
-                        <button class="dl-btn" onclick="dlCanvas('rt-flow','rt_flow')">↓</button>
+        <span class="mode-tag"><span id="mode-lbl" class="mode-auto">● Live · Supabase</span></span>
 
-                    </div>
+    </div>
 
-                </div>
+    <div class="sensors-grid">
 
-                <canvas id="rt-flow" height="100"></canvas>
+        <div class="sc s-light" id="sc-light">
+
+            <span class="s-icon">☀️</span>
+
+            <div class="s-lbl">Light Intensity</div>
+
+            <div class="s-val" id="sv-light">—<span class="s-unit">lux</span></div>
+
+            <div class="s-bar-w">
+
+                <div class="s-bar" id="sb-light" style="width:0%"></div>
 
             </div>
 
-            <div class="rt-card">
+            <div class="s-trend" id="st-light">—</div>
 
-                <div class="rt-head">
+            <span class="s-delta" id="sd-light"></span>
 
-                    <span class="rt-title">🪣 Tank Level</span>
+        </div>
 
-                    <div style="display:flex;align-items:center;gap:8px">
+        <div class="sc s-air" id="sc-air">
 
-                        <span class="rt-now" id="rn-tank">—</span>
+            <span class="s-icon">💨</span>
 
-                        <button class="dl-btn" onclick="dlCanvas('rt-tank','rt_tank')">↓</button>
+            <div class="s-lbl">Air Moisture</div>
 
-                    </div>
+            <div class="s-val" id="sv-air">—<span class="s-unit">%</span></div>
 
-                </div>
+            <div class="s-bar-w">
 
-                <canvas id="rt-tank" height="100"></canvas>
+                <div class="s-bar" id="sb-air" style="width:0%"></div>
+
+            </div>
+
+            <div class="s-trend" id="st-air">—</div>
+
+            <span class="s-delta" id="sd-air"></span>
+
+        </div>
+
+        <div class="sc s-soil" id="sc-soil">
+
+            <span class="s-icon">🌱</span>
+
+            <div class="s-lbl">Soil Moisture</div>
+
+            <div class="s-val" id="sv-soil">—<span class="s-unit">%</span></div>
+
+            <div class="threshold-target" style="font-size: 0.85rem; color: #52665C; margin-top: 4px;">Target Threshold:
+                <span id="ui-moisture-threshold">--</span>%
+            </div>
+
+            <div class="s-bar-w">
+
+                <div class="s-bar" id="sb-soil" style="width:0%"></div>
+
+            </div>
+
+            <div class="s-trend" id="st-soil">—</div>
+
+            <span class="s-delta" id="sd-soil"></span>
+
+        </div>
+
+        <div class="sc s-flow" id="sc-flow">
+
+            <span class="s-icon">💧</span>
+
+            <div class="s-lbl">Water Flow</div>
+
+            <div class="s-val" id="sv-flow">—<span class="s-unit">L/h</span></div>
+
+            <div class="s-bar-w">
+
+                <div class="s-bar" id="sb-flow" style="width:0%"></div>
+
+            </div>
+
+            <div class="s-trend" id="st-flow">—</div>
+
+            <span class="s-delta" id="sd-flow"></span>
+
+        </div>
+
+        <div class="sc s-tank" id="sc-tank">
+
+            <span class="s-icon">🪣</span>
+
+            <div class="s-lbl">Tank Level</div>
+
+            <div class="s-val" id="sv-tank">—<span class="s-unit">%</span></div>
+
+            <div class="s-bar-w">
+
+                <div class="s-bar" id="sb-tank" style="width:0%"></div>
+
+            </div>
+
+            <div class="s-trend" id="st-tank">—</div>
+
+            <span class="s-delta" id="sd-tank"></span>
+
+        </div>
+
+        <div class="sc s-ph" id="sc-ph">
+
+            <span class="s-icon">🧪</span>
+
+            <div class="s-lbl">Soil pH</div>
+
+            <!-- rn-ph: consumed by setCard('ph') for the live value readout -->
+
+            <div class="s-val" id="sv-ph"><span id="rn-ph">—</span><span class="s-unit">pH</span></div>
+
+            <div class="s-bar-w">
+
+                <div class="s-bar" id="sb-ph" style="width:0%"></div>
+
+            </div>
+
+            <div class="s-trend" id="st-ph">—</div>
+
+            <span class="s-delta" id="sd-ph"></span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MANUAL INPUT PANEL -->
+
+    <div class="input-panel">
+
+        <div class="ip-header">
+
+            <span class="ip-title">Manual Sensor Input</span>
+
+            <div style="display:flex;align-items:center;gap:10px">
+
+                <span style="font-size:10px;color:var(--sage)">Override with real hardware readings</span>
+
+                <button class="toggle-btn" id="manual-btn" onclick="toggleManual()">Enable Manual Mode</button>
 
             </div>
 
         </div>
 
+        <div class="ip-grid">
 
+            <div class="ig">
 
-        <!-- WEEKLY CHARTS -->
+                <span class="ig-lbl">☀️ Light (lux)</span>
 
-        <div class="section-head">Weekly Overview</div>
+                <input class="s-inp" id="in-light" type="number" min="0" max="100000" placeholder="e.g. 52000" disabled>
 
-        <div class="wk-grid">
-
-            <div class="wk-card">
-
-                <div class="wk-head">
-
-                    <span class="wk-title">Light & Solar Yield</span>
-
-                    <button class="dl-btn" onclick="dlCanvas('wk-light','wk_light')">↓ Save</button>
-
-                </div>
-
-                <canvas id="wk-light" height="150"></canvas>
+                <span class="ig-range">0 – 100,000 lux</span>
 
             </div>
 
-            <div class="wk-card">
+            <div class="ig">
 
-                <div class="wk-head">
+                <span class="ig-lbl">💨 Air Moisture (%)</span>
 
-                    <span class="wk-title">Air & Soil Moisture</span>
+                <input class="s-inp" id="in-air" type="number" min="0" max="100" placeholder="e.g. 68" disabled>
 
-                    <button class="dl-btn" onclick="dlCanvas('wk-moisture','wk_moisture')">↓ Save</button>
-
-                </div>
-
-                <canvas id="wk-moisture" height="150"></canvas>
+                <span class="ig-range">0 – 100 %</span>
 
             </div>
 
-            <div class="wk-card">
+            <div class="ig">
 
-                <div class="wk-head">
+                <span class="ig-lbl">🌱 Soil Moisture (%)</span>
 
-                    <span class="wk-title">Water Flow (L/h)</span>
+                <input class="s-inp" id="in-soil" type="number" min="0" max="100" placeholder="e.g. 74" disabled>
 
-                    <button class="dl-btn" onclick="dlCanvas('wk-flow','wk_flow')">↓ Save</button>
-
-                </div>
-
-                <canvas id="wk-flow" height="150"></canvas>
+                <span class="ig-range">0 – 100 %</span>
 
             </div>
 
-            <div class="wk-card">
+            <div class="ig">
 
-                <div class="wk-head">
+                <span class="ig-lbl">💧 Water Flow (L/h)</span>
 
-                    <span class="wk-title">Tank Level</span>
+                <input class="s-inp" id="in-flow" type="number" min="0" max="20" step="0.1" placeholder="e.g. 1.8"
+                    disabled>
 
-                    <button class="dl-btn" onclick="dlCanvas('wk-tank','wk_tank')">↓ Save</button>
+                <span class="ig-range">0 – 20 L/h</span>
 
-                </div>
+            </div>
 
-                <canvas id="wk-tank" height="150"></canvas>
+            <div class="ig">
+
+                <span class="ig-lbl">🪣 Tank Level (%)</span>
+
+                <input class="s-inp" id="in-tank" type="number" min="0" max="100" placeholder="e.g. 80" disabled>
+
+                <span class="ig-range">0 – 100 %</span>
+
+            </div>
+
+            <div class="ig">
+
+                <span class="ig-lbl">🧪 Soil pH</span>
+
+                <input class="s-inp" id="in-ph" type="number" min="0" max="14" step="0.1" placeholder="e.g. 6.5"
+                    disabled>
+
+                <span class="ig-range">0.0 – 14.0 pH</span>
 
             </div>
 
         </div>
 
-        <div class="full-card">
+        <div style="display:flex;align-items:center">
+
+            <button class="push-btn" id="push-btn" onclick="injectManual()" disabled>Push to Live Stream</button>
+
+            <span class="inject-ok" id="inject-ok">✓ Injected into stream</span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- REAL-TIME ROLLING CHARTS -->
+
+    <div class="section-head">
+
+        Real-Time Stream
+
+        <span style="font-size:10px;color:var(--sage);letter-spacing:.06em">Rolling window · updates every 3
+
+            s</span>
+
+    </div>
+
+    <div class="rt-grid-3">
+
+        <div class="rt-card">
+
+            <div class="rt-head">
+
+                <span class="rt-title">☀️ Light</span>
+
+                <div style="display:flex;align-items:center;gap:8px">
+
+                    <span class="rt-now" id="rn-light">—</span>
+
+                    <button class="dl-btn" onclick="dlCanvas('rt-light','rt_light')">↓</button>
+
+                </div>
+
+            </div>
+
+            <canvas id="rt-light" height="100"></canvas>
+
+        </div>
+
+        <div class="rt-card">
+
+            <div class="rt-head">
+
+                <span class="rt-title">💨 Air Moisture</span>
+
+                <div style="display:flex;align-items:center;gap:8px">
+
+                    <span class="rt-now" id="rn-air">—</span>
+
+                    <button class="dl-btn" onclick="dlCanvas('rt-air','rt_air')">↓</button>
+
+                </div>
+
+            </div>
+
+            <canvas id="rt-air" height="100"></canvas>
+
+        </div>
+
+        <div class="rt-card">
+
+            <div class="rt-head">
+
+                <span class="rt-title">🌱 Soil Moisture</span>
+
+                <div style="display:flex;align-items:center;gap:8px">
+
+                    <span class="rt-now" id="rn-soil">—</span>
+
+                    <button class="dl-btn" onclick="dlCanvas('rt-soil','rt_soil')">↓</button>
+
+                </div>
+
+            </div>
+
+            <canvas id="rt-soil" height="100"></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="rt-grid-2">
+
+        <div class="rt-card">
+
+            <div class="rt-head">
+
+                <span class="rt-title">💧 Water Flow</span>
+
+                <div style="display:flex;align-items:center;gap:8px">
+
+                    <span class="rt-now" id="rn-flow">—</span>
+
+                    <button class="dl-btn" onclick="dlCanvas('rt-flow','rt_flow')">↓</button>
+
+                </div>
+
+            </div>
+
+            <canvas id="rt-flow" height="100"></canvas>
+
+        </div>
+
+        <div class="rt-card">
+
+            <div class="rt-head">
+
+                <span class="rt-title">🪣 Tank Level</span>
+
+                <div style="display:flex;align-items:center;gap:8px">
+
+                    <span class="rt-now" id="rn-tank">—</span>
+
+                    <button class="dl-btn" onclick="dlCanvas('rt-tank','rt_tank')">↓</button>
+
+                </div>
+
+            </div>
+
+            <canvas id="rt-tank" height="100"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- WEEKLY CHARTS -->
+
+    <div class="section-head">Weekly Overview</div>
+
+    <div class="wk-grid">
+
+        <div class="wk-card">
 
             <div class="wk-head">
 
-                <span class="wk-title">All Sensors — 7-Day Overview</span>
+                <span class="wk-title">Light & Solar Yield</span>
 
-                <button class="dl-btn" onclick="dlCanvas('wk-all','wk_all_sensors')">↓ Save Full Report</button>
+                <button class="dl-btn" onclick="dlCanvas('wk-light','wk_light')">↓ Save</button>
 
             </div>
 
-            <canvas id="wk-all" height="110"></canvas>
+            <canvas id="wk-light" height="150"></canvas>
+
+        </div>
+
+        <div class="wk-card">
+
+            <div class="wk-head">
+
+                <span class="wk-title">Air & Soil Moisture</span>
+
+                <button class="dl-btn" onclick="dlCanvas('wk-moisture','wk_moisture')">↓ Save</button>
+
+            </div>
+
+            <canvas id="wk-moisture" height="150"></canvas>
+
+        </div>
+
+        <div class="wk-card">
+
+            <div class="wk-head">
+
+                <span class="wk-title">Water Flow (L/h)</span>
+
+                <button class="dl-btn" onclick="dlCanvas('wk-flow','wk_flow')">↓ Save</button>
+
+            </div>
+
+            <canvas id="wk-flow" height="150"></canvas>
+
+        </div>
+
+        <div class="wk-card">
+
+            <div class="wk-head">
+
+                <span class="wk-title">Tank Level</span>
+
+                <button class="dl-btn" onclick="dlCanvas('wk-tank','wk_tank')">↓ Save</button>
+
+            </div>
+
+            <canvas id="wk-tank" height="150"></canvas>
+
+        </div>
+
+    </div>
+
+    <div class="full-card">
+
+        <div class="wk-head">
+
+            <span class="wk-title">All Sensors — 7-Day Overview</span>
+
+            <button class="dl-btn" onclick="dlCanvas('wk-all','wk_all_sensors')">↓ Save Full Report</button>
+
+        </div>
+
+        <canvas id="wk-all" height="110"></canvas>
+
+    </div>
+
+
+
+    <!-- PLANTER NOTES -->
+
+    <div class="notes-wrap">
+
+        <div class="notes-head">
+
+            <span class="notes-title">Planter's Journal</span>
+
+            <span class="notes-plant" id="notes-plant-lbl">Rosemary</span>
+
+        </div>
+
+        <div class="notes-list" id="notes-list">
+
+            <div style="color:var(--sage);font-size:11px;padding:4px 0">No entries yet — begin your journal below.
+
+            </div>
+
+        </div>
+
+        <div class="notes-row">
+
+            <textarea class="note-ta" id="note-input" placeholder="Observation, treatment, reminder…"></textarea>
+
+            <button class="add-btn" onclick="addNote()">+ Add Note</button>
 
         </div>
 
 
 
-        <!-- PLANTER NOTES -->
-
-        <div class="notes-wrap">
-
-            <div class="notes-head">
-
-                <span class="notes-title">Planter's Journal</span>
-
-                <span class="notes-plant" id="notes-plant-lbl">Rosemary</span>
-
-            </div>
-
-            <div class="notes-list" id="notes-list">
-
-                <div style="color:var(--sage);font-size:11px;padding:4px 0">No entries yet — begin your journal below.
-
-                </div>
-
-            </div>
-
-            <div class="notes-row">
-
-                <textarea class="note-ta" id="note-input" placeholder="Observation, treatment, reminder…"></textarea>
-
-                <button class="add-btn" onclick="addNote()">+ Add Note</button>
-
-            </div>
-
-
-
-        </div>
+    </div>
 
 
 
@@ -2242,11 +2422,11 @@
 
         // and read every animation frame — zero setTimeout / mock intervals.
 
-        let _canvasFlowRate  = 0;   // L/h — drives particle velocity
+        let _canvasFlowRate = 0;   // L/h — drives particle velocity
 
-        let _canvasSoilPct   = 50;  // 0-100 — drives moisture glow
+        let _canvasSoilPct = 50;  // 0-100 — drives moisture glow
 
-        let _particleAF      = null;
+        let _particleAF = null;
 
 
 
@@ -2575,9 +2755,9 @@
 
         function updateCanvasMetrics(v) {
 
-            _canvasFlowRate = v.flow  || 0;
+            _canvasFlowRate = v.flow || 0;
 
-            _canvasSoilPct  = v.soil  || 0;
+            _canvasSoilPct = v.soil || 0;
 
 
 
@@ -2589,11 +2769,11 @@
 
                 strip.classList.remove('moist-ok', 'moist-warn', 'moist-mid');
 
-                if      (_canvasSoilPct < 20)  strip.classList.add('moist-warn');
+                if (_canvasSoilPct < 20) strip.classList.add('moist-warn');
 
-                else if (_canvasSoilPct >= 40)  strip.classList.add('moist-ok');
+                else if (_canvasSoilPct >= 40) strip.classList.add('moist-ok');
 
-                else                            strip.classList.add('moist-mid');
+                else strip.classList.add('moist-mid');
 
             }
 
@@ -3361,11 +3541,11 @@
 
             const canvas = document.getElementById('cam-canvas');
 
-            const ctx    = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d');
 
             const pCanvas = document.getElementById('particle-canvas');
 
-            const pCtx    = pCanvas.getContext('2d');
+            const pCtx = pCanvas.getContext('2d');
 
             const p = PLANTS[cur];
 
@@ -3373,11 +3553,11 @@
 
             function resize() {
 
-                const W = canvas.offsetWidth  || 700;
+                const W = canvas.offsetWidth || 700;
 
                 const H = canvas.offsetHeight || 300;
 
-                if (canvas.width  !== W || canvas.height !== H) { canvas.width  = W; canvas.height = H; }
+                if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
 
                 if (pCanvas.width !== W || pCanvas.height !== H) { pCanvas.width = W; pCanvas.height = H; }
 
@@ -3495,11 +3675,11 @@
 
                     const grad = pCtx.createRadialGradient(px, py, 0, px, py, sz * 2.8);
 
-                    grad.addColorStop(0,   `rgba(120, 220, 255, ${pt.alpha * (0.5 + flowNorm * 0.5)})`);
+                    grad.addColorStop(0, `rgba(120, 220, 255, ${pt.alpha * (0.5 + flowNorm * 0.5)})`);
 
                     grad.addColorStop(0.4, `rgba(60,  180, 255, ${pt.alpha * 0.6 * flowNorm})`);
 
-                    grad.addColorStop(1,   'rgba(0, 120, 200, 0)');
+                    grad.addColorStop(1, 'rgba(0, 120, 200, 0)');
 
 
 
@@ -3539,7 +3719,7 @@
 
                     trailGrad.addColorStop(Math.max(0, trailPhase - 0.2), 'rgba(60,180,255,0)');
 
-                    trailGrad.addColorStop(trailPhase,                     `rgba(100,220,255,${0.35 * flowNorm})`);
+                    trailGrad.addColorStop(trailPhase, `rgba(100,220,255,${0.35 * flowNorm})`);
 
                     trailGrad.addColorStop(Math.min(1, trailPhase + 0.2), 'rgba(60,180,255,0)');
 
@@ -3579,31 +3759,31 @@
 
                 // ── WARNING: pulsing red ──
 
-                glowColor  = '220, 60, 60';
+                glowColor = '220, 60, 60';
 
-                pulseFreq  = 1.8;  // fast anxious pulse
+                pulseFreq = 1.8;  // fast anxious pulse
 
-                baseAlpha  = 0.22;
+                baseAlpha = 0.22;
 
             } else if (soil >= 40) {
 
                 // ── HEALTHY: calm green ──
 
-                glowColor  = '60, 210, 100';
+                glowColor = '60, 210, 100';
 
-                pulseFreq  = 0.6;  // slow calm breath
+                pulseFreq = 0.6;  // slow calm breath
 
-                baseAlpha  = 0.14;
+                baseAlpha = 0.14;
 
             } else {
 
                 // ── TRANSITION (20–40%): amber ──
 
-                glowColor  = '240, 170, 40';
+                glowColor = '240, 170, 40';
 
-                pulseFreq  = 1.0;
+                pulseFreq = 1.0;
 
-                baseAlpha  = 0.16;
+                baseAlpha = 0.16;
 
             }
 
@@ -3633,11 +3813,11 @@
 
             const glowGrad = ctx.createRadialGradient(cx, cy * (rx / ry), 0, cx, cy * (rx / ry), rx);
 
-            glowGrad.addColorStop(0,   `rgba(${glowColor}, ${alpha})`);
+            glowGrad.addColorStop(0, `rgba(${glowColor}, ${alpha})`);
 
             glowGrad.addColorStop(0.5, `rgba(${glowColor}, ${alpha * 0.4})`);
 
-            glowGrad.addColorStop(1,   `rgba(${glowColor}, 0)`);
+            glowGrad.addColorStop(1, `rgba(${glowColor}, 0)`);
 
             ctx.fillStyle = glowGrad;
 
@@ -3969,214 +4149,137 @@
 
 
 
-        // Initialise the device camera as soon as the page is interactive.
-
-        // Uses `environment` facing mode to prefer the rear camera on phones.
-
-        async function initWebcam() {
-
+        // Open the camera modal and initialize stream
+        async function openCameraModal() {
+            const modal = document.getElementById('camera-modal');
+            const video = document.getElementById('vision-video');
+            const spinnerOverlay = document.getElementById('modal-spinner-overlay');
+            
+            if (spinnerOverlay) spinnerOverlay.style.display = 'none';
+            if (modal) modal.style.display = 'flex';
+            
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-
-                console.warn('[Vision] getUserMedia not supported on this browser.');
-
+                showToast('📷 Camera not supported on this browser.');
                 return;
-
             }
-
+            
             try {
-
                 _webcamStream = await navigator.mediaDevices.getUserMedia({
-
-                    video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
-
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
                     audio: false
-
                 });
-
-                const video = document.getElementById('vision-video');
-
                 if (video) {
-
                     video.srcObject = _webcamStream;
-
-                    // Show the vision strip once the stream is flowing
-
-                    video.onloadedmetadata = () => {
-
-                        document.getElementById('vision-strip').classList.add('active');
-
-                    };
-
+                    await video.play();
                 }
-
             } catch (err) {
-
-                // Permissions denied or no camera — gracefully hide strip
-
-                console.warn('[Vision] Camera access denied or unavailable:', err.message);
-
-                document.getElementById('vision-strip').classList.remove('active');
-
+                console.error('[Vision] Camera access error:', err);
+                showToast('⚠️ Camera access denied or unavailable.');
+                closeCameraModal();
             }
-
         }
 
-
-
-        // Called when the user clicks "Scan Plant via Camera".
-
-        // 1. Captures a still frame from the live video element.
-
-        // 2. Encodes it as a base64 JPEG.
-
-        // 3. POSTs it (along with current sensor telemetry) to /api/insights.
-
-        // 4. Calls applyVisionResult() to bind Gemini's response into the UI.
-
-        async function scanPlantViaCamera() {
-
-            const btn   = document.getElementById('scan-btn');
-
+        // Close the camera modal and shut down camera tracks completely
+        function closeCameraModal() {
+            const modal = document.getElementById('camera-modal');
             const video = document.getElementById('vision-video');
+            
+            if (modal) modal.style.display = 'none';
+            
+            if (_webcamStream) {
+                _webcamStream.getTracks().forEach(track => track.stop());
+                _webcamStream = null;
+            }
+            if (video) {
+                video.pause();
+                video.srcObject = null;
+            }
+        }
 
-            const snap  = document.getElementById('vision-snap-canvas');
-
-
+        // Capture snapshot from modal video and POST to insights API
+        async function captureAndAnalyze() {
+            const video = document.getElementById('vision-video');
+            const snap = document.getElementById('vision-snap-canvas');
+            const spinnerOverlay = document.getElementById('modal-spinner-overlay');
 
             if (!_webcamStream || !video || video.readyState < 2) {
-
-                showToast('📷 Camera not ready — please allow camera access and wait a moment.');
-
+                showToast('📷 Camera not ready — please wait.');
                 return;
-
             }
 
+            // Freeze the video viewfinder
+            video.pause();
 
-
-            // ── Debounce: ignore clicks while already scanning ────────────────────────
-
-            if (btn.classList.contains('scanning')) return;
-
-            btn.classList.add('scanning');
-
-
+            // Display "AI Agronomist Analyzing..." loading spinner overlay
+            if (spinnerOverlay) spinnerOverlay.style.display = 'flex';
 
             try {
-
-                // ── 1. Draw current video frame onto the hidden canvas ────────────────
-
-                snap.width  = video.videoWidth  || 640;
-
+                // 1. Draw current video frame onto the hidden canvas
+                snap.width = video.videoWidth || 640;
                 snap.height = video.videoHeight || 480;
-
                 const snapCtx = snap.getContext('2d');
-
                 snapCtx.drawImage(video, 0, 0, snap.width, snap.height);
 
-
-
-                // ── 2. Encode as JPEG base64 (quality 0.82) ──────────────────────────
-
-                const dataUrl   = snap.toDataURL('image/jpeg', 0.82);
-
-                // Strip the data-URL prefix so the server receives pure base64
-
+                // 2. Encode as JPEG base64 (quality 0.82)
+                const dataUrl = snap.toDataURL('image/jpeg', 0.82);
                 const imageData = dataUrl.replace(/^data:[^;]+;base64,/, '');
 
-
-
-                // Pulse the viewfinder to give visual feedback
-
-                document.getElementById('vision-video').classList.add('scanned');
-
-                setTimeout(() => document.getElementById('vision-video').classList.remove('scanned'), 900);
-
-
-
-                // ── 3. Build the telemetry payload for the serverless function ────────
-
-                const lastBuf     = rtBufs[cur];
-
-                const latestSoil  = lastBuf.soil.filter(v => v !== null).at(-1)  ?? 0;
-
-                const latestAir   = lastBuf.air.filter(v => v !== null).at(-1)   ?? 0;
-
-                const latestFlow  = lastBuf.flow.filter(v => v !== null).at(-1)  ?? 0;
-
-                const latestTank  = lastBuf.tank.filter(v => v !== null).at(-1)  ?? 0;
-
+                // 3. Build telemetry payload
+                const lastBuf = rtBufs[cur];
+                const latestSoil = lastBuf.soil.filter(v => v !== null).at(-1) ?? 0;
+                const latestAir = lastBuf.air.filter(v => v !== null).at(-1) ?? 0;
+                const latestFlow = lastBuf.flow.filter(v => v !== null).at(-1) ?? 0;
+                const latestTank = lastBuf.tank.filter(v => v !== null).at(-1) ?? 0;
                 const latestLight = lastBuf.light.filter(v => v !== null).at(-1) ?? 0;
-
-                const latestPh    = lastBuf.ph.filter(v => v !== null).at(-1)    ?? 7.0;
-
-
+                const latestPh = lastBuf.ph.filter(v => v !== null).at(-1) ?? 7.0;
 
                 const body = JSON.stringify({
-
-                    soil:      latestSoil,
-
-                    air:       latestAir,
-
-                    flow:      latestFlow,
-
-                    tank:      latestTank,
-
-                    light:     latestLight,
-
-                    ph:        latestPh,
-
-                    imageData  // base64 JPEG payload
-
+                    soil: latestSoil,
+                    air: latestAir,
+                    flow: latestFlow,
+                    tank: latestTank,
+                    light: latestLight,
+                    ph: latestPh,
+                    imageData
                 });
 
-
-
-                // ── 4. POST to the Vercel serverless function ─────────────────────────
-
+                // 4. POST toinsights API
                 const res = await window.fetch('/api/insights', {
-
-                    method:  'POST',
-
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-
                     body
-
                 });
-
-
 
                 if (!res.ok) {
-
                     const errJson = await res.json().catch(() => ({}));
-
                     console.error('[Vision] /api/insights error:', res.status, errJson);
-
                     showToast(`⚠️ Vision scan failed (HTTP ${res.status}) — check console.`);
-
+                    // Unfreeze video so user can try again
+                    video.play().catch(() => {});
+                    if (spinnerOverlay) spinnerOverlay.style.display = 'none';
                     return;
-
                 }
 
-
-
                 const result = await res.json();
-
+                
+                // Update dashboard plant name and threshold labels
                 applyVisionResult(result);
-
-
+                
+                // Automatically close the modal overlay to gracefully return user to dashboard
+                closeCameraModal();
 
             } catch (err) {
-
                 console.error('[Vision] Scan error:', err);
-
                 showToast('⚠️ Vision scan encountered a network error.');
-
-            } finally {
-
-                btn.classList.remove('scanning');
-
+                // Unfreeze video so user can retry
+                video.play().catch(() => {});
+                if (spinnerOverlay) spinnerOverlay.style.display = 'none';
             }
+        }
 
+        // Helper redirect for older/tab buttons calling scanPlantViaCamera
+        function scanPlantViaCamera() {
+            openCameraModal();
         }
 
 
@@ -4235,15 +4338,15 @@
 
             const threshEl = document.getElementById('vision-thresh');
 
-            const justEl   = document.getElementById('vision-just');
+            const justEl = document.getElementById('vision-just');
 
 
 
-            if (resultEl)  resultEl.textContent = detectedPlant;
+            if (resultEl) resultEl.textContent = detectedPlant;
 
-            if (threshEl)  threshEl.textContent = `💧 AI Soil Threshold: ${recommendedMoistureThreshold}%`;
+            if (threshEl) threshEl.textContent = `💧 AI Soil Threshold: ${recommendedMoistureThreshold}%`;
 
-            if (justEl)    justEl.textContent   = justification;
+            if (justEl) justEl.textContent = justification;
 
             const uiThreshold = document.getElementById('ui-moisture-threshold');
             if (uiThreshold) {
@@ -4330,21 +4433,39 @@
 
 
 
-        // Start webcam stream on page mount (environment-facing, audio off).
 
-        // Runs asynchronously — does not block the dashboard initialisation.
-
-        initWebcam();
 
     </script>
 
 
 
     <!-- hidden snapshot canvas used by the Gemini Vision scan -->
-
     <canvas id="vision-snap-canvas" style="display:none;"></canvas>
 
+    <!-- FULL-SCREEN CAMERA OVERLAY (MODAL) -->
+    <div id="camera-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(20, 40, 30, 0.95); z-index: 9999; justify-content: center; align-items: center;">
+        <!-- Video Viewfinder Wrapper to prevent orientation warping -->
+        <div style="width: 100%; height: 100%; position: relative;">
+            <video id="vision-video" class="vision-video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+            
+            <!-- CLOSE BUTTON (X) in top corner -->
+            <button onclick="closeCameraModal()" style="position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #FFFFFF; font-size: 20px; font-weight: 300; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); transition: all 0.2s; z-index: 10001;" title="Close scanner">✕</button>
+            
+            <!-- CAPTURE & ANALYZE BUTTON at bottom center -->
+            <div style="position: absolute; bottom: 48px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 10001;">
+                <button onclick="captureAndAnalyze()" style="width: 80px; height: 80px; border-radius: 50%; background: #FFFFFF; border: 6px solid #BCE5D2; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.2s; outline: none;" id="capture-btn" title="Capture and Analyze">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--accent); transition: transform 0.25s;" onmouseover="this.style.transform='scale(0.9)'" onmouseout="this.style.transform='scale(1)'"></div>
+                </button>
+                <span style="color: #FFFFFF; font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Capture & Analyze</span>
+            </div>
 
+            <!-- AI AGRONOMIST ANALYZING SPINNER OVERLAY -->
+            <div id="modal-spinner-overlay" style="display: none; position: absolute; inset: 0; background: rgba(20, 40, 30, 0.9); flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 10002; backdrop-filter: blur(8px);">
+                <div style="width: 50px; height: 50px; border: 4px solid rgba(140, 255, 194, 0.2); border-top-color: #8CFFC2; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <div style="color: #FFFFFF; font-weight: 500; font-size: 16px; font-family: 'Cormorant Garamond', serif; letter-spacing: 0.05em;">AI Agronomist Analyzing...</div>
+            </div>
+        </div>
+    </div>
 
 </body>
 
